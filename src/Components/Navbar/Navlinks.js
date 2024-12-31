@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import Food from '../Category/Food';
+import { Link } from 'react-router-dom';
+
 
 const PetStoreCategories = () => {
   // State for the dropdowns
@@ -12,6 +15,7 @@ const PetStoreCategories = () => {
   const [showLightningDeals, setShowLightningDeals] = useState(false);
 
   return (
+    
     <Navbar>
       <NavContainer>
         <NavItem>
@@ -34,7 +38,9 @@ const PetStoreCategories = () => {
           </Category>
           {showDogs && (
             <SubCategoryList>
-              <SubCategoryItem>Food</SubCategoryItem>
+              <SubCategoryItem>
+                  <StyledLink to="/food">Food</StyledLink>
+                </SubCategoryItem>
               <SubCategoryItem>Accessories</SubCategoryItem>
               <SubCategoryItem>Treats</SubCategoryItem>
               <SubCategoryItem>Toys</SubCategoryItem>
@@ -45,6 +51,8 @@ const PetStoreCategories = () => {
             </SubCategoryList>
           )}
         </NavItem>
+
+    
 
         <NavItem>
           <Category onClick={() => setShowCats(!showCats)}>
@@ -113,6 +121,8 @@ const PetStoreCategories = () => {
         </NavItem>
       </NavContainer>
     </Navbar>
+ 
+    
   );
 };
 
@@ -181,5 +191,12 @@ const SubCategoryItem = styled.div`
     background-color: #5a6276;
   }
 `;
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: white;
 
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 export default PetStoreCategories;

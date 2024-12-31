@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { BrowserRouter as Router, Route,  Link } from 'react-router-dom';
-
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import PropTypes from 'prop-types';
 
 // Styled Components
 const Card = styled.div`
@@ -50,19 +50,27 @@ const NGOButton = styled.button`
 `;
 
 const NGOCard = ({ ngo }) => {
-  const handleClick = () => {
-    window.open(ngo.link, "_blank", "noopener,noreferrer");
-  };
-
   return (
     <Card>
       <NGOContent>
         <Title>{ngo.name}</Title>
         <p>Support our mission to make a difference in the world!</p>
-        <NGOButton onClick={handleClick}>Support Us</NGOButton>
+        {/* Navigate to /support page when the button is clicked */}
+        <Link to={`/support/${ngo.id}`}>
+          <NGOButton>Support Us</NGOButton>
+        </Link>
       </NGOContent>
     </Card>
   );
+};
+
+// Prop validation
+NGOCard.propTypes = {
+  ngo: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    link: PropTypes.string.isRequired
+  }).isRequired
 };
 
 export default NGOCard;

@@ -6,6 +6,8 @@ export const Navbar = () =>{
     return (
         <>
         <PrimarySearchAppBar/>
+
+        
         <PetStoreCategories/>
         {/* <Router>
         
