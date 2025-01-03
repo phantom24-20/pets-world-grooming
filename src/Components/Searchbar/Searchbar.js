@@ -20,7 +20,11 @@ import CallIcon from '@mui/icons-material/Call';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import Logo from "../../assets/DALL·E 2024-12-22 13.20.56 - A circular logo design featuring a German Shepherd dog with straight ears, (1).jpg"
 import MoreIcon from '@mui/icons-material/MoreVert';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import SearchArea from '../SearchArea/SearchArea';
+import PincodeSearch from '../PincodeSearch/PinCodeSearch';
 
+// Styled Components
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -63,6 +67,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const navigate = useNavigate();
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -84,6 +89,13 @@ export default function PrimarySearchAppBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const navigateToLogin = () => {
+    navigate('/login'); // Navigate to the Login page
+  };
+  const navigateToCart = () => {
+    navigate('/cart'); // Navigate to the cart page
+  };
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -101,8 +113,8 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+     <MenuItem onClick={navigateToLogin}>Login</MenuItem>
+      <MenuItem onClick={handleMenuClose}>My Account</MenuItem>
     </Menu>
   );
 
@@ -143,7 +155,7 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem onClick={navigateToLogin}>
         <IconButton
           size="large"
           aria-label="account of current user"
@@ -153,7 +165,7 @@ export default function PrimarySearchAppBar() {
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>Login</p>
       </MenuItem>
     </Menu>
   );
@@ -171,10 +183,9 @@ export default function PrimarySearchAppBar() {
           >
             <MenuIcon />
           </IconButton>
-        
-            <img src={ Logo} style={{width : "4.5%",marginRight:"1rem",borderRadius: "30px"}} >
-            </img>
-  
+
+          <img src={Logo} style={{ width: "4.5%", marginRight: "1rem", borderRadius: "30px" }} alt="logo" />
+
           <Typography
             variant="h6"
             noWrap
@@ -184,7 +195,7 @@ export default function PrimarySearchAppBar() {
             PETS WORLD GROOMING
             <div style={{ color: "wheat", fontSize: "0.80rem" }}>Paws and Claws, Love without Flaws</div>
           </Typography>
-          <Search>
+          {/* <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -192,40 +203,43 @@ export default function PrimarySearchAppBar() {
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
             />
-          </Search>
+          </Search> */}
+          <SearchArea/>
+          <div style={{display:"flex",alignItems:"center"}}>
           <PinDropIcon />
-          <Box
+          {/* <Box
             component="form"
             sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}
             noValidate
             autoComplete="off"
           >
-            {/* Styling the PinCode TextField to make the text color white */}
-            <TextField 
-              id="outlined-basic" 
-              label="PinCode" 
-              variant="outlined" 
+            <TextField
+              id="outlined-basic"
+              label="PinCode"
+              variant="outlined"
               sx={{
                 '& .MuiInputBase-root': {
-                  color: 'white', // Make the text white
+                  color: 'white',
                 },
                 '& .MuiInputLabel-root': {
-                  color: 'white', // Change label color to white
+                  color: 'white',
                 },
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
-                    borderColor: 'white', // Change the border color to white
+                    borderColor: 'white',
                   },
                   '&:hover fieldset': {
-                    borderColor: 'white', // Change the border color when focused
+                    borderColor: 'white',
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: 'white', // Change the border color when focused
+                    borderColor: 'white',
                   },
                 },
               }}
             />
-          </Box>
+          </Box> */}
+          <PincodeSearch/>
+          </div>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
@@ -241,8 +255,8 @@ export default function PrimarySearchAppBar() {
             </IconButton>
             <IconButton
               size="large"
-              aria-label="show 17 new notifications"
               color="inherit"
+              onClick={navigateToCart} // Navigate to cart page
             >
               <Badge badgeContent={0} color="error">
                 <ShoppingCartCheckoutIcon />
@@ -250,7 +264,7 @@ export default function PrimarySearchAppBar() {
             </IconButton>
             <IconButton
               size="large"
-              edge="end"
+              edge="end"           
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
@@ -279,3 +293,25 @@ export default function PrimarySearchAppBar() {
     </Box>
   );
 }
+
+// function ProfilePage() {
+//   return (
+//     <div>
+//       <h2>Profile Page</h2>
+//       <p>Welcome to the profile page!</p>
+//     </div>
+//   );
+// }
+
+// function App() {
+//   return (
+//     <Router>
+//       <Routes>
+//         <Route path="/" element={<PrimarySearchAppBar />} />
+//         <Route path="/profile" element={<ProfilePage />} />
+//       </Routes>
+//     </Router>
+//   );
+// }
+
+// export default App;

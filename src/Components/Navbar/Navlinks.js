@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Food from '../Category/Food';
 import { Link } from 'react-router-dom';
 
 
@@ -39,19 +38,43 @@ const PetStoreCategories = () => {
           {showDogs && (
             <SubCategoryList>
               <SubCategoryItem>
-                  <StyledLink to="/food">Food</StyledLink>
-                </SubCategoryItem>
-              <SubCategoryItem>Accessories</SubCategoryItem>
-              <SubCategoryItem>Treats</SubCategoryItem>
-              <SubCategoryItem>Toys</SubCategoryItem>
-              <SubCategoryItem>Clothes</SubCategoryItem>
-              <SubCategoryItem>Collars</SubCategoryItem>
-              <SubCategoryItem>Leashes</SubCategoryItem>
-              <SubCategoryItem>Harness</SubCategoryItem>
+                <StyledLink to="/subcategory/food" target="_blank"
+              rel="noopener noreferrer">Food</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+                <StyledLink to="/subcategory/treats">Treats</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/subcategory/accessories">Accessories</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/subcategory/toys">Toys</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/subcategory/clothes">Clothing</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/subcategory/collars">Collars & Leashes & Harness</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/subcategory/leashes">Grooming Accessories</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/subcategory/harness">Dog Beds</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/subcategory/harness">Bowls</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/subcategory/harness">Health</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/subcategory/harness">Hygiene & Training Supplies</StyledLink>
+              </SubCategoryItem>
+              {/* Add more subcategories here */}
             </SubCategoryList>
           )}
         </NavItem>
-
     
 
         <NavItem>
@@ -60,14 +83,30 @@ const PetStoreCategories = () => {
           </Category>
           {showCats && (
             <SubCategoryList>
-              <SubCategoryItem>Food</SubCategoryItem>
-              <SubCategoryItem>Accessories</SubCategoryItem>
-              <SubCategoryItem>Treats</SubCategoryItem>
-              <SubCategoryItem>Toys</SubCategoryItem>
-              <SubCategoryItem>Clothes</SubCategoryItem>
-              <SubCategoryItem>Collars</SubCategoryItem>
-              <SubCategoryItem>Leashes</SubCategoryItem>
-              <SubCategoryItem>Harness</SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/cat/food">Food</StyledLink>
+              </SubCategoryItem>
+              
+              <SubCategoryItem>
+              <StyledLink to="/cat/accessories">Accessories</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/cat/treats">Treats</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/cat/toys">Toys</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/cat/clothes">Clothes</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/cat/leashes">Leashes</StyledLink>
+              </SubCategoryItem>
+              <SubCategoryItem>
+              <StyledLink to="/cat/harness">Harness</StyledLink>
+              </SubCategoryItem>
             </SubCategoryList>
           )}
         </NavItem>
