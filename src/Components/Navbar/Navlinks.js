@@ -23,10 +23,14 @@ const PetStoreCategories = () => {
           </Category>
           {showGrooming && (
             <SubCategoryList>
-              <SubCategoryItem>10:00 AM - 12:00 PM</SubCategoryItem>
-              <SubCategoryItem>12:00 PM - 2:00 PM</SubCategoryItem>
+
+              <SubCategoryItem>
+              <StyledLink to="/slots/grooming-flow" target="_blank"
+              rel="noopener noreferrer">BOOK YOUR SLOTS</StyledLink>
+                </SubCategoryItem>
+              {/* <SubCategoryItem>12:00 PM - 2:00 PM</SubCategoryItem>
               <SubCategoryItem>2:00 PM - 4:00 PM</SubCategoryItem>
-              <SubCategoryItem>4:00 PM - 6:00 PM</SubCategoryItem>
+              <SubCategoryItem>4:00 PM - 6:00 PM</SubCategoryItem> */}
             </SubCategoryList>
           )}
         </NavItem>
@@ -128,7 +132,7 @@ const PetStoreCategories = () => {
           </Category>
           {showVet && (
             <SubCategoryList>
-              <SubCategoryItem>Available Vets</SubCategoryItem>
+              <SubCategoryItem >Available Vets</SubCategoryItem>
               <SubCategoryItem>Book Appointment</SubCategoryItem>
             </SubCategoryList>
           )}
@@ -140,9 +144,11 @@ const PetStoreCategories = () => {
           </Category>
           {showPharmacy && (
             <SubCategoryList>
-              <SubCategoryItem>Medications</SubCategoryItem>
-              <SubCategoryItem>Supplements</SubCategoryItem>
-              <SubCategoryItem>First Aid</SubCategoryItem>
+              <SubCategoryItem> <StyledLink to="/pharm/more">CLICK FOR MORE</StyledLink>
+              </SubCategoryItem>
+              {/* <SubCategoryItem>Supplements</SubCategoryItem>
+              <SubCategoryItem>First Aid</SubCategoryItem> */}
+
             </SubCategoryList>
           )}
         </NavItem>
@@ -153,7 +159,9 @@ const PetStoreCategories = () => {
           </Category>
           {showLightningDeals && (
             <SubCategoryList>
-              <SubCategoryItem>Current Deals</SubCategoryItem>
+              <SubCategoryItem  >
+              <StyledLink to="/deals/lightning">Current Deals</StyledLink>
+              </SubCategoryItem>
               <SubCategoryItem>Upcoming Deals</SubCategoryItem>
             </SubCategoryList>
           )}

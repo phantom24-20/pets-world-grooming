@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-
+import Checkout from './Checkout';
 const Container = styled.div`
   padding: 20px;
   display: flex;
@@ -76,6 +76,7 @@ const Cart = ({ cartItems = [], setCartItems }) => {
           </>
         )}
       </CartBox>
+      <Checkout/>
     </Container>
   );
 };
