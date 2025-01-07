@@ -999,366 +999,388 @@
 // // };
 
 // // export default GroomingPackages;
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
+// Styled Components for Grooming Flow
+const AppContainer = styled.div`
+  font-family: 'Roboto', sans-serif;
+  padding: 20px;
+  max-width: 1000px;
+  margin: auto;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+`;
+
+const Header = styled.h1`
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+`;
+
+const Section = styled.div`
+  margin-bottom: 20px;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  background-color: ${(props) => (props.primary ? '#28a745' : '#007bff')};
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  margin-top: 20px;
+  width: 100%;
+  &:hover {
+    background-color: ${(props) => (props.primary ? '#218838' : '#0056b3')};
+  }
+`;
+
+const InputField = styled.input`
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;
+
+const Label = styled.label`
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+`;
+
+const SlotContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+`;
+
+const Slot = styled.div`
+  display: inline-block;
+  padding: 10px;
+  margin: 5px;
+  cursor: ${(props) => (props.isBooked ? 'not-allowed' : 'pointer')};
+  background-color: ${(props) =>
+    props.isBooked ? '#ccc' : props.selected ? '#007bff' : '#fff'};
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  color: ${(props) => (props.selected ? '#fff' : '#000')};
+  &:hover {
+    background-color: ${(props) =>
+      props.isBooked ? '#ccc' : props.selected ? '#0056b3' : '#f0f0f0'};
+  }
+`;
+
+const ConfirmationMessage = styled.h3`
+  color: green;
+  text-align: center;
+`;
+
+const StepContainer = styled.div`
+  max-width: 600px;
+  margin: 0 auto;
+`;
+
+// Package Prices
+const packagePrices = {
+  basic: 30,
+  standard: 50,
+  premium: 75,
+};
+
+// Unified Grooming Flow Component
+const GroomingFlow = () => {
+  const navigate = useNavigate();
+  const [step, setStep] = useState(1);
+
+  // State for Customer Details
+  const [customerDetails, setCustomerDetails] = useState({
+    name: '',
+    contactNumber: '',
+    email: '',
+    address: '',
+  });
+
+  // State for Dog Details
+  const [dogDetails, setDogDetails] = useState({
+    name: '',
+    age: '',
+    breed: '',
+    size: '',
+    hairLength: '',
+    isFerocious: null,
+  });
+
+  // State for Grooming Slot
+  const [selectedSlot, setSelectedSlot] = useState('');
+
+  // State for Selected Add-Ons
+  const [selectedAddOns, setSelectedAddOns] = useState([]);
+
+  // State for Payment
+  const [paymentMethod, setPaymentMethod] = useState('');
+
+  const [bookedSlots, setBookedSlots] = useState(['12:00', '16:00']); // Example booked slots
+  const [cart, setCart] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState('');
+
+  // Handlers for form fields and changes
+  const handleInputChange = (e, field, setState) => {
+    setState((prev) => ({ ...prev, [field]: e.target.value }));
+  };
+
+  const handleRadioChange = (e, field, setState) => {
+    setState((prev) => ({ ...prev, [field]: e.target.value }));
+  };
+
+  const handleSlotSelect = (slot) => {
+    if (bookedSlots.includes(slot)) return;
+    setSelectedSlot(slot);
+  };
+
+  const handleAddonSelect = (addon) => {
+    setSelectedAddOns((prev) =>
+      prev.includes(addon) ? prev.filter((item) => item !== addon) : [...prev, addon]
+    );
+  };
+
+  const handlePackageSelect = (pkg) => {
+    setSelectedPackage(pkg);
+  };
+
+  const calculatePrice = () => {
+    let totalPrice = packagePrices[selectedPackage];
+    selectedAddOns.forEach(() => {
+      totalPrice += 10; // Additional charge for add-ons
+    });
+    // Adjust price based on dog size and hair length
+    if (dogDetails.size === 'large' || dogDetails.size === 'giant') totalPrice += 20;
+    if (dogDetails.hairLength === 'long') totalPrice += 10;
+    return totalPrice;
+  };
+
+  const handleAddToCart = () => {
+    const price = calculatePrice();
+    const cartItem = {
+      package: selectedPackage,
+      price: price,
+      addOns: selectedAddOns,
+      slot: selectedSlot,
+    };
+    setCart([...cart, cartItem]);
+    setShowPopup(true); // Show the popup with the price
+  };
+
+  const handlePayment = (method) => {
+    setPaymentMethod(method);
+    if (method === 'razorpay') {
+      window.open('https://razorpay.com', '_blank');
+    } else if (method === 'paypal') {
+      window.open('https://www.paypal.com', '_blank');
+    } else if (method === 'upi') {
+      window.open('upi://pay?pa=your_upi_id&pn=YourName&mc=0000&tid=1234567890&tr=txn123&am=10.00&cu=INR', '_blank');
+    }
+  };
+
+  const getDiscountedPrice = (numSessions) => {
+    const discountRate = 0.1; // 10% discount for 3 sessions
+    const priceForThreeSessions = numSessions * packagePrices[selectedPackage] * (1 - discountRate);
+    return priceForThreeSessions;
+  };
+
+  const steps = [
+    {
+      title: 'Customer Details',
+      content: (
+        <div>
+          <Label>Name:</Label>
+          <InputField
+            type="text"
+            value={customerDetails.name}
+            onChange={(e) => handleInputChange(e, 'name', setCustomerDetails)}
+            placeholder="Enter your full name"
+          />
+          <Label>Contact Number:</Label>
+          <InputField
+            type="text"
+            value={customerDetails.contactNumber}
+            onChange={(e) => handleInputChange(e, 'contactNumber', setCustomerDetails)}
+            placeholder="Enter contact number"
+          />
+          <Label>Email ID:</Label>
+          <InputField
+            type="email"
+            value={customerDetails.email}
+            onChange={(e) => handleInputChange(e, 'email', setCustomerDetails)}
+            placeholder="Enter email"
+          />
+          <Label>Address:</Label>
+          <InputField
+            type="text"
+            value={customerDetails.address}
+            onChange={(e) => handleInputChange(e, 'address', setCustomerDetails)}
+            placeholder="Enter address"
+          />
+        </div>
+      )
+    },
+    {
+      title: 'Dog Details',
+      content: (
+        <div>
+          <Label>Dog Name:</Label>
+          <InputField
+            type="text"
+            value={dogDetails.name}
+            onChange={(e) => handleInputChange(e, 'name', setDogDetails)}
+            placeholder="Enter dog name"
+          />
+          <Label>Age:</Label>
+          <InputField
+            type="text"
+            value={dogDetails.age}
+            onChange={(e) => handleInputChange(e, 'age', setDogDetails)}
+            placeholder="Enter dog age"
+          />
+          <Label>Breed:</Label>
+          <InputField
+            type="text"
+            value={dogDetails.breed}
+            onChange={(e) => handleInputChange(e, 'breed', setDogDetails)}
+            placeholder="Enter dog breed"
+          />
+          <Label>Size:</Label>
+          <select
+            value={dogDetails.size}
+            onChange={(e) => handleInputChange(e, 'size', setDogDetails)}
+          >
+            <option value="">Select Size</option>
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+            <option value="giant">Giant</option>
+          </select>
+          <Label>Hair Length:</Label>
+          <select
+            value={dogDetails.hairLength}
+            onChange={(e) => handleInputChange(e, 'hairLength', setDogDetails)}
+          >
+            <option value="">Select Hair Length</option>
+            <option value="short">Short</option>
+            <option value="medium">Medium</option>
+            <option value="long">Long</option>
+          </select>
+          <Label>Ferocious:</Label>
+          <div>
+            <label>
+              <input
+                type="radio"
+                value="true"
+                checked={dogDetails.isFerocious === 'true'}
+                onChange={(e) => handleRadioChange(e, 'isFerocious', setDogDetails)}
+              />
+              Yes
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="false"
+                checked={dogDetails.isFerocious === 'false'}
+                onChange={(e) => handleRadioChange(e, 'isFerocious', setDogDetails)}
+              />
+              No
+            </label>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: 'Select Grooming Package',
+      content: (
+        <div>
+          <Label>Select Package:</Label>
+          <div>
+            {['Basic', 'Standard', 'Premium'].map((pkg) => (
+              <div key={pkg} onClick={() => handlePackageSelect(pkg)}>
+                <h4>{pkg}</h4>
+                <p>Details of {pkg} Package</p>
+                <Button onClick={handleAddToCart}>Add to Cart</Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    },
+    {
+      title: 'Select Grooming Slot',
+      content: (
+        <div>
+          <Label>Select Slot:</Label>
+          <SlotContainer>
+            {['10:00', '12:00', '14:00', '16:00', '18:00'].map((slot) => (
+              <Slot
+                key={slot}
+                isBooked={bookedSlots.includes(slot)}
+                selected={selectedSlot === slot}
+                onClick={() => handleSlotSelect(slot)}
+              >
+                {slot}
+              </Slot>
+            ))}
+          </SlotContainer>
+        </div>
+      )
+    },
+    {
+      title: 'Confirmation & Payment',
+      content: (
+        <div>
+          <Label>Payment Method:</Label>
+          <div>
+            <Button onClick={() => handlePayment('razorpay')}>Pay with Razorpay</Button>
+            <Button onClick={() => handlePayment('paypal')}>Pay with PayPal</Button>
+            <Button onClick={() => handlePayment('upi')}>Pay with UPI</Button>
+          </div>
+        </div>
+      )
+    }
+  ];
+
+  return (
+    <AppContainer>
+      <Header>Pet Grooming Appointment</Header>
+      <StepContainer>
+        <h2>{steps[step - 1].title}</h2>
+        {steps[step - 1].content}
+        <Button primary onClick={() => setStep((prev) => prev + 1)}>
+          {step === 5 ? 'Submit' : 'Next'}
+        </Button>
+      </StepContainer>
+
+      {/* Popup for Discounted Price */}
+      {showPopup && (
+        <div className="popup">
+          <div className="popup-content">
+            <h4>Item Added to Cart</h4>
+            <p>Package: {selectedPackage}</p>
+            <p>Price for 1 Session: ${packagePrices[selectedPackage]}</p>
+            <p>
+              Price for 3 Sessions (with Discount): ${getDiscountedPrice(3).toFixed(2)}
+            </p>
+            <Button onClick={() => setShowPopup(false)}>Close</Button>
+          </div>
+        </div>
+      )}
+    </AppContainer>
+  );
+};
+
+export default GroomingFlow;
 
 
-// import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import styled from 'styled-components';
 
-// // Styled Components for Grooming Flow
-// const AppContainer = styled.div`
-//   font-family: 'Roboto', sans-serif;
-//   padding: 20px;
-//   max-width: 1000px;
-//   margin: auto;
-//   background-color: #f8f9fa;
-//   border-radius: 10px;
-//   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-// `;
-
-// const Header = styled.h1`
-//   text-align: center;
-//   color: #333;
-//   margin-bottom: 30px;
-// `;
-
-// const Section = styled.div`
-//   margin-bottom: 20px;
-// `;
-
-// const Button = styled.button`
-//   padding: 10px 20px;
-//   background-color: ${(props) => (props.primary ? '#28a745' : '#007bff')};
-//   color: white;
-//   font-weight: bold;
-//   border-radius: 5px;
-//   cursor: pointer;
-//   border: none;
-//   margin-top: 20px;
-//   width: 100%;
-//   &:hover {
-//     background-color: ${(props) => (props.primary ? '#218838' : '#0056b3')};
-//   }
-// `;
-
-// const InputField = styled.input`
-//   width: 100%;
-//   padding: 10px;
-//   margin-bottom: 10px;
-//   border-radius: 5px;
-//   border: 1px solid #ccc;
-// `;
-
-// const Label = styled.label`
-//   font-weight: bold;
-//   display: block;
-//   margin-bottom: 5px;
-// `;
-
-// const SlotContainer = styled.div`
-//   display: flex;
-//   flex-wrap: wrap;
-//   margin-top: 20px;
-// `;
-
-// const Slot = styled.div`
-//   display: inline-block;
-//   padding: 10px;
-//   margin: 5px;
-//   cursor: ${(props) => (props.isBooked ? 'not-allowed' : 'pointer')};
-//   background-color: ${(props) =>
-//     props.isBooked ? '#ccc' : props.selected ? '#007bff' : '#fff'};
-//   border: 1px solid #ddd;
-//   border-radius: 5px;
-//   color: ${(props) => (props.selected ? '#fff' : '#000')};
-//   &:hover {
-//     background-color: ${(props) =>
-//       props.isBooked ? '#ccc' : props.selected ? '#0056b3' : '#f0f0f0'};
-//   }
-// `;
-
-// const ConfirmationMessage = styled.h3`
-//   color: green;
-//   text-align: center;
-// `;
-
-// const StepContainer = styled.div`
-//   max-width: 600px;
-//   margin: 0 auto;
-// `;
-
-// // Unified Grooming Flow Component
-// const GroomingFlow = () => {
-//   const navigate = useNavigate();
-//   const [step, setStep] = useState(1);
-
-//   // State for Customer Details
-//   const [customerDetails, setCustomerDetails] = useState({
-//     name: '',
-//     contactNumber: '',
-//     email: '',
-//     address: '',
-//   });
-
-//   // State for Dog Details
-//   const [dogDetails, setDogDetails] = useState({
-//     name: '',
-//     age: '',
-//     breed: '',
-//     size: '',
-//     hairLength: '',
-//     isFerocious: null,
-//   });
-
-//   // State for Grooming Slot
-//   const [selectedSlot, setSelectedSlot] = useState('');
-
-//   // State for Selected Add-Ons
-//   const [selectedAddOns, setSelectedAddOns] = useState([]);
-
-//   // State for Payment
-//   const [paymentMethod, setPaymentMethod] = useState('');
-
-//   const [bookedSlots, setBookedSlots] = useState(['12:00', '16:00']); // Example booked slots
-
-//   // Handlers for form fields and changes
-//   const handleInputChange = (e, field, setState) => {
-//     setState((prev) => ({ ...prev, [field]: e.target.value }));
-//   };
-
-//   const handleRadioChange = (e, field, setState) => {
-//     setState((prev) => ({ ...prev, [field]: e.target.value }));
-//   };
-
-//   const handleSlotSelect = (slot) => {
-//     if (bookedSlots.includes(slot)) return;
-//     setSelectedSlot(slot);
-//   };
-
-//   const handleAddonSelect = (addon) => {
-//     setSelectedAddOns((prev) =>
-//       prev.includes(addon) ? prev.filter((item) => item !== addon) : [...prev, addon]
-//     );
-//   };
-
-//   const validateCustomerDetails = () => {
-//     const { name, contactNumber, email, address } = customerDetails;
-//     const namePattern = /^[A-Za-z ]+$/;
-//     const contactPattern = /^\d{10}$/;
-//     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-//     if (!name.match(namePattern)) return false;
-//     if (!contactNumber.match(contactPattern)) return false;
-//     if (!email.match(emailPattern)) return false;
-//     if (!address) return false;
-//     return true;
-//   };
-
-//   const validateDogDetails = () => {
-//     const { name, age, breed, size, hairLength, isFerocious } = dogDetails;
-//     return name && age && breed && size && hairLength && isFerocious !== null;
-//   };
-
-//   const goToNextStep = () => {
-//     if (step === 1 && !validateCustomerDetails()) {
-//       alert('Please fill in all fields correctly!');
-//       return;
-//     }
-//     if (step === 2 && !validateDogDetails()) {
-//       alert('Please fill in all dog details correctly!');
-//       return;
-//     }
-//     if (step === 3 && !selectedSlot) {
-//       alert('Please select a grooming slot!');
-//       return;
-//     }
-
-//     setStep((prevStep) => prevStep + 1);
-//   };
-
-//   const handlePayment = (method) => {
-//     setPaymentMethod(method);
-//     if (method === 'razorpay') {
-//       window.open('https://razorpay.com', '_blank');
-//     } else if (method === 'paypal') {
-//       window.open('https://www.paypal.com', '_blank');
-//     } else if (method === 'upi') {
-//       window.open('upi://pay?pa=your_upi_id&pn=YourName&mc=0000&tid=1234567890&tr=txn123&am=10.00&cu=INR', '_blank');
-//     }
-//   };
-
-//   const steps = [
-//     {
-//       title: 'Customer Details',
-//       content: (
-//         <div>
-//           <Label>Name:</Label>
-//           <InputField
-//             type="text"
-//             value={customerDetails.name}
-//             onChange={(e) => handleInputChange(e, 'name', setCustomerDetails)}
-//             placeholder="Enter your full name"
-//           />
-//           <Label>Contact Number:</Label>
-//           <InputField
-//             type="text"
-//             value={customerDetails.contactNumber}
-//             onChange={(e) => handleInputChange(e, 'contactNumber', setCustomerDetails)}
-//             placeholder="Enter contact number"
-//           />
-//           <Label>Email ID:</Label>
-//           <InputField
-//             type="email"
-//             value={customerDetails.email}
-//             onChange={(e) => handleInputChange(e, 'email', setCustomerDetails)}
-//             placeholder="Enter email"
-//           />
-//           <Label>Address:</Label>
-//           <InputField
-//             type="text"
-//             value={customerDetails.address}
-//             onChange={(e) => handleInputChange(e, 'address', setCustomerDetails)}
-//             placeholder="Enter address"
-//           />
-//         </div>
-//       )
-//     },
-//     {
-//       title: 'Dog Details',
-//       content: (
-//         <div>
-//           <Label>Dog Name:</Label>
-//           <InputField
-//             type="text"
-//             value={dogDetails.name}
-//             onChange={(e) => handleInputChange(e, 'name', setDogDetails)}
-//             placeholder="Enter dog name"
-//           />
-//           <Label>Age:</Label>
-//           <InputField
-//             type="text"
-//             value={dogDetails.age}
-//             onChange={(e) => handleInputChange(e, 'age', setDogDetails)}
-//             placeholder="Enter dog age"
-//           />
-//           <Label>Breed:</Label>
-//           <InputField
-//             type="text"
-//             value={dogDetails.breed}
-//             onChange={(e) => handleInputChange(e, 'breed', setDogDetails)}
-//             placeholder="Enter dog breed"
-//           />
-//           <Label>Size:</Label>
-//           <select
-//             value={dogDetails.size}
-//             onChange={(e) => handleInputChange(e, 'size', setDogDetails)}
-//           >
-//             <option value="">Select Size</option>
-//             <option value="small">Small</option>
-//             <option value="medium">Medium</option>
-//             <option value="large">Large</option>
-//             <option value="giant">Giant</option>
-//           </select>
-//           <Label>Hair Length:</Label>
-//           <select
-//             value={dogDetails.hairLength}
-//             onChange={(e) => handleInputChange(e, 'hairLength', setDogDetails)}
-//           >
-//             <option value="">Select Hair Length</option>
-//             <option value="short">Short</option>
-//             <option value="medium">Medium</option>
-//             <option value="long">Long</option>
-//           </select>
-//           <Label>Ferocious:</Label>
-//           <div>
-//             <label>
-//               <input
-//                 type="radio"
-//                 value="true"
-//                 checked={dogDetails.isFerocious === 'true'}
-//                 onChange={(e) => handleRadioChange(e, 'isFerocious', setDogDetails)}
-//               />
-//               Yes
-//             </label>
-//             <label>
-//               <input
-//                 type="radio"
-//                 value="false"
-//                 checked={dogDetails.isFerocious === 'false'}
-//                 onChange={(e) => handleRadioChange(e, 'isFerocious', setDogDetails)}
-//               />
-//               No
-//             </label>
-//           </div>
-//         </div>
-//       )
-//     },
-//     {
-//       title: 'Select Grooming Slot',
-//       content: (
-//         <div>
-//           <Label>Select Slot:</Label>
-//           <SlotContainer>
-//             {['10:00', '12:00', '14:00', '16:00', '18:00'].map((slot) => (
-//               <Slot
-//                 key={slot}
-//                 isBooked={bookedSlots.includes(slot)}
-//                 selected={selectedSlot === slot}
-//                 onClick={() => handleSlotSelect(slot)}
-//               >
-//                 {slot}
-//               </Slot>
-//             ))}
-//           </SlotContainer>
-//         </div>
-//       )
-//     },
-//     {
-//       title: 'Add-Ons',
-//       content: (
-//         <div>
-//           <Label>Choose Add-ons:</Label>
-//           <div>
-//             {['De-matting', 'Stylish Hair Cut', 'Teeth Brushing'].map((addon) => (
-//               <div key={addon}>
-//                 <input
-//                   type="checkbox"
-//                   checked={selectedAddOns.includes(addon)}
-//                   onChange={() => handleAddonSelect(addon)}
-//                 />
-//                 {addon}
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-//       )
-//     },
-//     {
-//       title: 'Confirmation & Payment',
-//       content: (
-//         <div>
-//           <Label>Payment Method:</Label>
-//           <div>
-//             <Button onClick={() => handlePayment('razorpay')}>Pay with Razorpay</Button>
-//             <Button onClick={() => handlePayment('paypal')}>Pay with PayPal</Button>
-//             <Button onClick={() => handlePayment('upi')}>Pay with UPI</Button>
-//           </div>
-//         </div>
-//       )
-//     }
-//   ];
-
-//   return (
-//     <AppContainer>
-//       <Header>Pet Grooming Appointment</Header>
-//       <StepContainer>
-//         <h2>{steps[step - 1].title}</h2>
-//         {steps[step - 1].content}
-//         <Button primary onClick={goToNextStep}>
-//           {step === 5 ? 'Submit' : 'Next'}
-//         </Button>
-//       </StepContainer>
-//     </AppContainer>
-//   );
-// };
-
-// export default GroomingFlow;

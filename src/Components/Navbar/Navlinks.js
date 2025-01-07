@@ -116,27 +116,34 @@ const PetStoreCategories = () => {
         </NavItem>
 
         <NavItem>
-          <Category onClick={() => setShowPetStar(!showPetStar)}>
-            Pet Star {showPetStar ? '▲' : '▼'}
-          </Category>
-          {showPetStar && (
-            <SubCategoryList>
-              <SubCategoryItem>Special Offers</SubCategoryItem>
-            </SubCategoryList>
-          )}
-        </NavItem>
+  <Category onClick={() => setShowPetStar(!showPetStar)}>
+    Pet Star {showPetStar ? '▲' : '▼'}
+  </Category>
+  {showPetStar && (
+    <SubCategoryList>
+      <SubCategoryItem>
+        {/* Add the link to the Pet Star Special Offers page */}
+        <StyledLink to="/pet-star">Special Offers</StyledLink>
+      </SubCategoryItem>
+    </SubCategoryList>
+  )}
+</NavItem>
 
         <NavItem>
-          <Category onClick={() => setShowVet(!showVet)}>
-            Consult a Vet {showVet ? '▲' : '▼'}
-          </Category>
-          {showVet && (
-            <SubCategoryList>
-              <SubCategoryItem >Available Vets</SubCategoryItem>
-              <SubCategoryItem>Book Appointment</SubCategoryItem>
-            </SubCategoryList>
-          )}
-        </NavItem>
+  <Category onClick={() => setShowVet(!showVet)}>
+    Consult a Vet {showVet ? '▲' : '▼'}
+  </Category>
+  {showVet && (
+    <SubCategoryList>
+      {/* <SubCategoryItem>
+        <StyledLink to="/consult-vet">Available Vets</StyledLink>
+      </SubCategoryItem> */}
+      <SubCategoryItem>
+        <StyledLink to="/consult-vet">Contact</StyledLink>
+      </SubCategoryItem>
+    </SubCategoryList>
+  )}
+</NavItem>
 
         <NavItem>
           <Category onClick={() => setShowPharmacy(!showPharmacy)}>

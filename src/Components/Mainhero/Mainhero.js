@@ -1,24 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import ProductCards from '../Herocards/Herocards';
-import HeroLuxe from '../Herocards/Luxue';
+import { useLocation, useNavigate } from 'react-router-dom';  // Import useLocation and useNavigate
+import { Routes, Route } from 'react-router-dom';  // Import Routes and Route
 import AdImage from "../../assets/Banner.jpg";  // Ensure this is the correct path to your image
+import ProductCards from '../Herocards/Herocards';
+import DogFoodPage from '../PetComponents/DogFood';
+import CatFoodPage from '../PetComponents/CatFood';
+import HeroLuxe from '../Herocards/Luxue';
 import Pharmacy from '../Herocards/Pharmacy';
 import CatsAdd from '../Herocards/CatsAdd';
 import BrandCards from '../Herocards/BrandCards';
 import VetCare from '../Herocards/VetCare';
 import DemoReviews from '../Herocards/DemoReview';
+import PetStar from '../PetStar/PetStar';  // Import the PetStar component
+
 // Styled Components
 const AdContainer = styled.div`
   width: 100%;
-  margin-top: 20px; /* Space after navbar and search bar */
-  background: url(${AdImage}) no-repeat center center;  /* Ensure the image is centered */
-  padding: 80px 0;  /* Adjusted padding to ensure text is clear */
+  margin-top: 20px;
+  background: url(${AdImage}) no-repeat center center;
+  padding: 80px 0;
   color: white;
-  background-size: cover;  /* Makes sure the image covers the entire container */
-  background-position: center center; /* Centers the image */
-  background-repeat: no-repeat;  /* Ensures the image doesn't repeat if it’s smaller than the container */
-  height: 100vh;  /* Full viewport height to make it full-screen */
+  background-size: cover;
+  background-position: center center;
+  height: 100vh;
 `;
 
 const AdContent = styled.div`
@@ -29,7 +34,7 @@ const AdContent = styled.div`
   text-align: center;
   max-width: 1200px;
   margin: 0 auto;
-  background-color: rgba(0, 0, 0, 0.5); /* Transparent black background to improve text visibility */
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   padding: 20px;
 `;
@@ -65,32 +70,61 @@ const Button = styled.button`
   }
 `;
 
-const ImageSection = styled.div`
-  flex: 1;
-  padding: 20px;
-  display: none; /* Hides this section, as the image is set as the background */
-`;
-
 const Mainhero = () => {
+  const location = useLocation();
+  const [showAd, setShowAd] = useState(true);
+  const navigate = useNavigate();  // Hook to navigate programmatically
+
+  // Hide the ad on any route other than the main page '/'
+  useEffect(() => {
+    if (location.pathname !== '/') {
+      setShowAd(false);
+    } else {
+      setShowAd(true);
+    }
+  }, [location]);
+
+  // Function to handle "Shop Now" button click
+  const handleShopNow = () => {
+    navigate("/pet-star");  // Navigate to the PetStar component
+  };
+
   return (
     <div>
-    <AdContainer>
-      <AdContent>
-        <Heading>Pet Star Dog Food</Heading>
-        <SubHeading>Give your dog the best with Pet Star – nutritious, tasty, and loved by dogs everywhere!</SubHeading>
-        <Button>Shop Now</Button>
-      </AdContent>
-      <ImageSection>
-        {/* ImageSection is hidden as the background image is set */}
-      </ImageSection>
-    </AdContainer>
-    <ProductCards/>
-    <HeroLuxe/>
-    <Pharmacy/>
-    <CatsAdd/>
-    <BrandCards/>
-    <VetCare/>
-    <DemoReviews/>
+      {/* Conditionally render the AdContainer */}
+      {showAd && (
+        <AdContainer>
+          <AdContent>
+            <Heading>Pet Star Dog Food</Heading>
+            <SubHeading>Give your dog the best with Pet Star – nutritious, tasty, and loved by dogs everywhere!</SubHeading>
+            <Button onClick={handleShopNow}>Shop Now</Button> {/* Trigger navigation on click */}
+          </AdContent>
+        </AdContainer>
+      )}
+
+      <Routes>
+        {/* Main routes */}
+        <Route path="/" element={<ProductCards />} />  {/* Main product list */}
+        <Route path="/dog-food" element={<DogFoodPage />} />  {/* Dog Food page */}
+        <Route path="/cat-food" element={<CatFoodPage />} />  {/* Cat Food page */}
+
+        {/* Other category routes */}
+        <Route path="/luxury" element={<HeroLuxe />} />
+        <Route path="/pharmacy" element={<Pharmacy />} />
+        <Route path="/cats-add" element={<CatsAdd />} />
+        <Route path="/brands" element={<BrandCards />} />
+        <Route path="/vet-care" element={<VetCare />} />
+        <Route path="/reviews" element={<DemoReviews />} />
+        
+        {/* PetStar component route */}
+        <Route path="/pet-star" element={<PetStar />} />  {/* PetStar page */}
+      </Routes>
+      <HeroLuxe />
+      <Pharmacy />
+      <CatsAdd />
+      <BrandCards />
+      <VetCare />
+      <DemoReviews />
     </div>
   );
 };

@@ -1,15 +1,10 @@
-// import React from "react";
-// export const Herocard = () =>{
-//     return (
-//         <>
-        
-//         </>
-//     )
-// }import React from "react";
+import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";  // Import useNavigate for programmatic navigation
 import Add from "./Add";
 import CarouselHero from "./Carousel";
 import FlashSale from "./FlashSale";
+
 // Styled Components
 const Container = styled.div`
   display: grid;
@@ -37,7 +32,7 @@ const Card = styled.div`
   &:hover {
     transform: translateY(-10px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    background-color: #f9f9f9; /* Slight background change on hover */
+    background-color: #f9f9f9;
   }
 `;
 
@@ -63,48 +58,54 @@ const Discount = styled.p`
   color: green;
   margin-top: 10px;
 
-  /* Highlighted part for the discount percentage */
   span {
     font-weight: bolder;
-    font-size: 1.4rem;  /* Make the percentage part larger */
-    color: #ff4500;  /* Make the discount percentage stand out */
+    font-size: 1.4rem;
+    color: #ff4500;
   }
 `;
 
 const ProductCards = () => {
+  const navigate = useNavigate(); // Hook to navigate to different pages
+  
   const cards = [
-    { category: "Dog food", discount: "Upto 40% off", imageUrl: "https://via.placeholder.com/150?text=Dog+Food" },
-    { category: "Cat food", discount: "Upto 35% off", imageUrl: "https://via.placeholder.com/150?text=Cat+Food" },
-    { category: "Treats", discount: "Upto 25% off", imageUrl: "https://via.placeholder.com/150?text=Treats" },
-    { category: "Premium Foods", discount: "Upto 25% off", imageUrl: "https://via.placeholder.com/150?text=Premium+Foods" },
-    { category: "Winter wear", discount: "Upto 45% off", imageUrl: "https://via.placeholder.com/150?text=Winter+Wear" },
-    { category: "Toys", discount: "Upto 50% off", imageUrl: "https://via.placeholder.com/150?text=Toys" },
-    { category: "Grooming", discount: "Upto 50% off", imageUrl: "https://via.placeholder.com/150?text=Grooming" },
-    { category: "Pharmacy", discount: "Upto 11% off", imageUrl: "https://via.placeholder.com/150?text=Pharmacy" },
-    { category: "Litter Supplies", discount: "Upto 40% off", imageUrl: "https://via.placeholder.com/150?text=Litter+Supplies" },
-    { category: "Walk Essentials", discount: "Upto 50% off", imageUrl: "https://via.placeholder.com/150?text=Walk+Essentials" },
-    { category: "Beds & Mats", discount: "Upto 50% off", imageUrl: "https://via.placeholder.com/150?text=Beds+%26+Mats" },
-    { category: "Travel Supplies", discount: "Upto 40% off", imageUrl: "https://via.placeholder.com/150?text=Travel+Supplies" },
+    { category: "Dog food", discount: "Upto 40% off", imageUrl: "https://via.placeholder.com/150?text=Dog+Food", page: "/dog-food" },
+    { category: "Cat food", discount: "Upto 35% off", imageUrl: "https://via.placeholder.com/150?text=Cat+Food", page: "/cat-food" },
+    { category: "Treats", discount: "Upto 25% off", imageUrl: "https://via.placeholder.com/150?text=Treats", page: "/treats" },
+    { category: "Premium Foods", discount: "Upto 25% off", imageUrl: "https://via.placeholder.com/150?text=Premium+Foods", page: "/premium-foods" },
+    { category: "Winter wear", discount: "Upto 45% off", imageUrl: "https://via.placeholder.com/150?text=Winter+Wear", page: "/winter-wear" },
+    { category: "Toys", discount: "Upto 50% off", imageUrl: "https://via.placeholder.com/150?text=Toys", page: "/toys" },
+    { category: "Grooming", discount: "Upto 50% off", imageUrl: "https://via.placeholder.com/150?text=Grooming", page: "/grooming" },
+    { category: "Pharmacy", discount: "Upto 11% off", imageUrl: "https://via.placeholder.com/150?text=Pharmacy", page: "/pharmacy" },
+    { category: "Litter Supplies", discount: "Upto 40% off", imageUrl: "https://via.placeholder.com/150?text=Litter+Supplies", page: "/litter-supplies" },
+    { category: "Walk Essentials", discount: "Upto 50% off", imageUrl: "https://via.placeholder.com/150?text=Walk+Essentials", page: "/walk-essentials" },
+    { category: "Beds & Mats", discount: "Upto 50% off", imageUrl: "https://via.placeholder.com/150?text=Beds+%26+Mats", page: "/beds-mats" },
+    { category: "Travel Supplies", discount: "Upto 40% off", imageUrl: "https://via.placeholder.com/150?text=Travel+Supplies", page: "/travel-supplies" },
   ];
+
+  const handleCardClick = (page) => {
+    // Custom action before navigating (e.g., log the category click, update state, etc.)
+    console.log(`Navigating to ${page}`); // Example action
+    navigate(page); // Navigate to the respective category page
+  };
 
   return (
     <>
-    <Container>
-      {cards.map((card, index) => (
-        <Card key={index}>
-          <Image bgImage={card.imageUrl} />
-          <Category>{card.category}</Category>
-          <Discount>
-            {card.discount.split(" ")[0]} <span>{card.discount.split(" ")[1]}</span> {card.discount.split(" ")[2]}
-          </Discount>
-        </Card>
-      ))}
-    </Container>
-    <Add/>
-    <CarouselHero/>
-    <FlashSale/>
-   </>
-    
+      <Container>
+        {cards.map((card, index) => (
+          <Card key={index} onClick={() => handleCardClick(card.page)}>
+            <Image bgImage={card.imageUrl} />
+            <Category>{card.category}</Category>
+            <Discount>
+              {card.discount.split(" ")[0]} <span>{card.discount.split(" ")[1]}</span> {card.discount.split(" ")[2]}
+            </Discount>
+          </Card>
+        ))}
+      </Container>
+      <Add />
+      <CarouselHero />
+      <FlashSale/>
+    </>
   );
 };
 

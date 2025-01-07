@@ -14,6 +14,8 @@ import OrderTracking from '../Tracking/Tracking';
 import GroomingPackages from '../Grooming/Grooming';
 import CustomerDetails from '../Grooming/CustomerDetails';
 import GroomingFlow from '../Grooming/Grooming';
+import ConsultVet from '../SubCategories/ConsultVet/ConsultVet';
+import PetStar from '../PetStar/PetStar';
 // import { Confirmation } from '../Grooming/ConfirmationPage';
 export const Navbar = () =>{
     const [cartItems, setCartItems] = useState([]);
@@ -44,8 +46,9 @@ export const Navbar = () =>{
          {/* <Route path="slots/:name" element={<CustomerDetails />} />
         <Route path="slots/grooming-packages" element={<GroomingPackages />} /> */}
         {/* <Route path="/confirmation" element={Confirmation} /> */}
-
+        <Route path="/pet-star" element={<PetStar />} />  
         <Route path="/slots/:name" element={<GroomingFlow />} />
+        <Route path="/consult-vet" element={<ConsultVet/>} />
 
 
 
