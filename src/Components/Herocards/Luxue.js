@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 
 // Styled components for layout and styling
 const HeroContainer = styled.div`
@@ -33,7 +34,8 @@ const BrandCard = styled.div`
   padding: 15px;
   text-align: center;
   transition: transform 0.3s ease-in-out;
-  
+  cursor: pointer;
+
   &:hover {
     transform: scale(1.05);
   }
@@ -58,43 +60,54 @@ const BrandDescription = styled.p`
   margin-top: 10px;
 `;
 
-// HeroCard functional component
+// HeroLuxe functional component
 const HeroLuxe = () => {
-  // State for dynamic brand info (you can expand this with more dynamic data)
+  const navigate = useNavigate(); // Navigation hook
+
+  // State for dynamic brand info
   const [brands] = useState([
     {
-      name: 'Origin',
-      image: 'https://via.placeholder.com/100',
-      description: 'Premium dog and cat food brand.',
+      name: "Origin",
+      image: "https://via.placeholder.com/100",
+      description: "Premium dog and cat food brand.",
+      id: "origin",
     },
     {
-      name: 'N&D',
-      image: 'https://via.placeholder.com/100',
-      description: 'Veterinary recommended pet food brand.',
+      name: "N&D",
+      image: "https://via.placeholder.com/100",
+      description: "Veterinary recommended pet food brand.",
+      id: "nd",
     },
     {
-      name: 'Bark Out Loud',
-      image: 'https://via.placeholder.com/100',
-      description: 'Natural pet food with high-quality ingredients.',
+      name: "Bark Out Loud",
+      image: "https://via.placeholder.com/100",
+      description: "Natural pet food with high-quality ingredients.",
+      id: "bark-out-loud",
     },
     {
-      name: 'Taste Of Cold',
-      image: 'https://via.placeholder.com/100',
-      description: 'Holistic approach to pet food and treats.',
+      name: "Taste Of Cold",
+      image: "https://via.placeholder.com/100",
+      description: "Holistic approach to pet food and treats.",
+      id: "taste-of-cold",
     },
     {
-      name: 'Kong',
-      image: 'https://via.placeholder.com/100',
-      description: 'Biologically appropriate pet food with fresh ingredients.',
+      name: "Kong",
+      image: "https://via.placeholder.com/100",
+      description: "Biologically appropriate pet food with fresh ingredients.",
+      id: "kong",
     },
   ]);
+
+  const handleCardClick = (id) => {
+    navigate(`/luxury/${id}`,'_blank'); // Navigate to brand details page
+  };
 
   return (
     <HeroContainer>
       <HeroTitle>Luxury Pet Brands</HeroTitle>
       <BrandContainer>
         {brands.map((brand, index) => (
-          <BrandCard key={index}>
+          <BrandCard key={index} onClick={() => handleCardClick(brand.id)}>
             <BrandImage src={brand.image} alt={brand.name} />
             <BrandName>{brand.name}</BrandName>
             <BrandDescription>{brand.description}</BrandDescription>

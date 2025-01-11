@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
@@ -35,6 +34,7 @@ const Button = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  width: 30%;
 
   &:hover {
     background-color: #e68900;
@@ -51,17 +51,25 @@ const CatsAdd = () => {
   const [showText, setShowText] = useState(false);
 
   const toggleText = () => {
-    setShowText(prevState => !prevState);
+    setShowText((prevState) => !prevState);
+  };
+
+  const handleShopMore = () => {
+    window.open('/shop', '_blank'); // Open the shop page in a new tab
   };
 
   return (
     <HeroContainer>
       <HeroContent>
         <h1>Carniwel - Premium Cat Food</h1>
+
         {showText && <Text>Your cat deserves the best with Carniwel. Made with quality ingredients for a healthy life!</Text>}
-        <Button onClick={toggleText}>
-          {showText ? 'Hide Details' : 'Show Details'}
-        </Button>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Button onClick={toggleText}>
+            {showText ? 'Hide Details' : 'Show Details'}
+          </Button>
+          <Button onClick={handleShopMore}>SHOP FOR MORE</Button> {/* Opens the shop page in a new tab */}
+        </div>
       </HeroContent>
     </HeroContainer>
   );

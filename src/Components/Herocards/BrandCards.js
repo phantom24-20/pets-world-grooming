@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 // Styled Components for Layout and Cards
 const HeroSection = styled.div`
   display: flex;
-  justify-content: space-around;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
   padding: 20px;
   background-color: #f8f8f8;
 `;
@@ -16,10 +17,10 @@ const Card = styled.div`
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: 10px;
   overflow: hidden;
   text-align: center;
   transition: transform 0.3s ease-in-out;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-10px);
@@ -29,7 +30,7 @@ const Card = styled.div`
 const ImageWrapper = styled.div`
   height: 50%;
   width: 100%;
-  background-image: url(${props => props.imgUrl});
+  background-image: url(${(props) => props.imgUrl});
   background-size: cover;
   background-position: center;
 `;
@@ -50,13 +51,6 @@ const DiscountText = styled.p`
   font-weight: bold;
 `;
 
-const HeroImage = styled.img`
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 8px;
-`;
-
 const TopBrandsTitle = styled.h1`
   text-align: center;
   font-size: 36px;
@@ -66,83 +60,269 @@ const TopBrandsTitle = styled.h1`
   text-transform: uppercase;
 `;
 
-// App Component
+const productData = [
+  {
+    id: 1,
+    brand: "Goodies",
+    name: "Goodies Treats",
+    image: "https://via.placeholder.com/200x150?text=Treats+Image",
+    discount: 30,
+    price: 200,
+    relatedProducts: [
+      {
+        id: 7,
+        name: "Goodies Biscuit",
+        image: "https://via.placeholder.com/200x150?text=Goodies+Biscuit",
+        discount: 20,
+        price: 150,
+      },
+      {
+        id: 8,
+        name: "Goodies Snacks",
+        image: "https://via.placeholder.com/200x150?text=Goodies+Snacks",
+        discount: 15,
+        price: 250,
+      },
+    ],
+  },
+  {
+    id: 2,
+    brand: "Wahl",
+    name: "Shampoo Wahl",
+    image: "https://via.placeholder.com/200x150?text=Shampoo+Image",
+    discount: 12,
+    price: 500,
+    relatedProducts: [
+      {
+        id: 9,
+        name: "Wahl Conditioner",
+        image: "https://via.placeholder.com/200x150?text=Wahl+Conditioner",
+        discount: 10,
+        price: 400,
+      },
+      {
+        id: 10,
+        name: "Wahl Pet Comb",
+        image: "https://via.placeholder.com/200x150?text=Wahl+Pet+Comb",
+        discount: 8,
+        price: 100,
+      },
+    ],
+  },
+  {
+    id: 4,
+    name: 'Bowlers Food',
+    image: 'https://via.placeholder.com/200x150?text=Bowlers+Image',
+    discount: 10,
+    price: 250,
+  },
+  {
+    id: 5,
+    name: 'Happy Cat Litter',
+    image: 'https://via.placeholder.com/200x150?text=Litter+Image',
+    discount: 10,
+    price: 150,
+  },
+  {
+    id: 6,
+    name: 'Mankind Medicines',
+    image: 'https://via.placeholder.com/200x150?text=Medicines+Image',
+    discount: 10,
+    price: 400,
+  },
+  // Add more brand products as needed...
+];
+
 function BrandCards() {
-  // Image URLs for different products (you can replace these URLs with actual images)
-  const productImages = {
-    treats: 'https://via.placeholder.com/200x150?text=Treats+Image',
-    shampoo: 'https://via.placeholder.com/200x150?text=Shampoo+Image',
-    supercoat: 'https://via.placeholder.com/200x150?text=Supercoat+Image',
-    bowlers: 'https://via.placeholder.com/200x150?text=Bowlers+Image',
-    litter: 'https://via.placeholder.com/200x150?text=Litter+Image',
-    medicines: 'https://via.placeholder.com/200x150?text=Medicines+Image',
+  const handleCardClick = (product) => {
+    const newWindow = window.open("", "_blank");
+
+    const discountedPrice = (
+      product.price -
+      (product.price * product.discount) / 100
+    ).toFixed(2);
+
+    const relatedProductsHTML = product.relatedProducts
+      .map(
+        (related) => `
+      <div class="related-product">
+        <img src="${related.image}" alt="${related.name}" />
+        <h4>${related.name}</h4>
+        <p>
+          Original: <s>$${related.price}</s> 
+          Discount: ${related.discount}%
+          <br />
+          Price: <strong>$${(
+            related.price -
+            (related.price * related.discount) / 100
+          ).toFixed(2)}</strong>
+        </p>
+      </div>
+    `
+      )
+      .join("");
+
+
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>${product.name}</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+          }
+          .product-details {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+          }
+          img {
+            width: 300px;
+            height: auto;
+            border-radius: 8px;
+          }
+          h1 {
+            color: #333;
+          }
+          .price {
+            font-size: 18px;
+            margin: 10px 0;
+          }
+          .price s {
+            color: gray;
+          }
+          .discount {
+            color: #ff6347;
+            font-weight: bold;
+          }
+          button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+          }
+          .add-to-cart {
+            background-color: #28a745;
+            color: white;
+          }
+          .wishlist {
+            background-color: #ff6347;
+            color: white;
+          }
+          .related-products {
+            margin-top: 20px;
+          }
+          .related-product {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+          }
+          .related-product img {
+            width: 150px;
+            height: auto;
+            margin-bottom: 5px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="product-details">
+          <h1>${product.name}</h1>
+          <img src="${product.image}" alt="${product.name}" />
+          <p class="price">
+            Original Price: <s>$${product.price}</s> 
+            <span class="discount">Discount: ${product.discount}%</span>
+          </p>
+          <p class="price">
+            Discounted Price: <strong>$${discountedPrice}</strong>
+          </p>
+          <button class="add-to-cart">Add to Cart</button>
+          <button class="wishlist">Add to Wishlist</button>
+        </div>
+        <div class="related-products">
+          <h2>Other Products from ${product.brand}</h2>
+          ${relatedProductsHTML}
+        </div>
+      </body>
+      </html>
+    `;
+
+    newWindow.document.open();
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
   };
 
   return (
     <div>
-      {/* TOP BRANDS Title */}
       <TopBrandsTitle>TOP BRANDS</TopBrandsTitle>
-
       <HeroSection>
-        {/* Treats Card */}
-        <Card>
-          <ImageWrapper imgUrl={productImages.treats} />
-          <InfoWrapper>
-            <Title>Goodies Treats</Title>
-            <DiscountText>Upto 30% OFF</DiscountText>
-          </InfoWrapper>
-        </Card>
-
-        {/* Shampoo Card */}
-        <Card>
-          <ImageWrapper imgUrl={productImages.shampoo} />
-          <InfoWrapper>
-            <Title>Shampoo Wahl</Title>
-            <DiscountText>Upto 12% OFF</DiscountText>
-          </InfoWrapper>
-        </Card>
-
-        {/* Supercoat Food Card */}
-        <Card>
-          <ImageWrapper imgUrl={productImages.supercoat} />
-          <InfoWrapper>
-            <Title>Supercoat Food</Title>
-            <DiscountText>Upto 15% OFF</DiscountText>
-          </InfoWrapper>
-        </Card>
-
-        {/* Bowlers Food Card */}
-        <Card>
-          <ImageWrapper imgUrl={productImages.bowlers} />
-          <InfoWrapper>
-            <Title>Bowlers Food</Title>
-            <DiscountText>Upto 10% OFF</DiscountText>
-          </InfoWrapper>
-        </Card>
-
-        {/* Happy Cat Litter Card */}
-        <Card>
-          <ImageWrapper imgUrl={productImages.litter} />
-          <InfoWrapper>
-            <Title>Happy Cat Litter</Title>
-            <DiscountText>Upto 10% OFF</DiscountText>
-          </InfoWrapper>
-        </Card>
-
-        {/* Mankind Medicines Card */}
-        <Card>
-          <ImageWrapper imgUrl={productImages.medicines} />
-          <InfoWrapper>
-            <Title>Mankind Medicines</Title>
-            <DiscountText>Upto 10% OFF</DiscountText>
-          </InfoWrapper>
-        </Card>
+        {productData.map((product) => (
+          <Card key={product.id} onClick={() => handleCardClick(product)}>
+            <ImageWrapper imgUrl={product.image} />
+            <InfoWrapper>
+              <Title>{product.name}</Title>
+              <DiscountText>Upto {product.discount}% OFF</DiscountText>
+            </InfoWrapper>
+          </Card>
+        ))}
       </HeroSection>
-
-      {/* Hero Section Image */}
-      <HeroImage src="https://via.placeholder.com/1920x600?text=Pet+Store+Promo" alt="Pet Store Promo" />
     </div>
   );
 }
 
 export default BrandCards;
+
+
+
+// const productData = [
+//   {
+//     id: 1,
+//     name: 'Goodies Treats',
+//     image: 'https://via.placeholder.com/200x150?text=Treats+Image',
+//     discount: 30,
+//     price: 200,
+//   },
+//   {
+//     id: 2,
+//     name: 'Shampoo Wahl',
+//     image: 'https://via.placeholder.com/200x150?text=Shampoo+Image',
+//     discount: 12,
+//     price: 500,
+//   },
+//   {
+//     id: 3,
+//     name: 'Supercoat Food',
+//     image: 'https://via.placeholder.com/200x150?text=Supercoat+Image',
+//     discount: 15,
+//     price: 300,
+//   },
+  // {
+  //   id: 4,
+  //   name: 'Bowlers Food',
+  //   image: 'https://via.placeholder.com/200x150?text=Bowlers+Image',
+  //   discount: 10,
+  //   price: 250,
+  // },
+  // {
+  //   id: 5,
+  //   name: 'Happy Cat Litter',
+  //   image: 'https://via.placeholder.com/200x150?text=Litter+Image',
+  //   discount: 10,
+  //   price: 150,
+  // },
+  // {
+  //   id: 6,
+  //   name: 'Mankind Medicines',
+  //   image: 'https://via.placeholder.com/200x150?text=Medicines+Image',
+  //   discount: 10,
+  //   price: 400,
+  // },
+// ];

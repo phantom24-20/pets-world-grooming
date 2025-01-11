@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";  // Import useNavigate for programmatic navigation
+import { FaArrowRight,FaArrowLeft } from "react-icons/fa";
 import Add from "./Add";
 import CarouselHero from "./Carousel";
 import FlashSale from "./FlashSale";
@@ -84,14 +85,22 @@ const ProductCards = () => {
   ];
 
   const handleCardClick = (page) => {
-    // Custom action before navigating (e.g., log the category click, update state, etc.)
-    console.log(`Navigating to ${page}`); // Example action
-    navigate(page); // Navigate to the respective category page
+    const fullUrl = `${window.location.origin}${page}`; // Construct the absolute URL
+    console.log(`Opening ${fullUrl} in a new tab`);
+    window.open(fullUrl, "_blank"); // Open the page in a new tab
   };
 
   return (
     <>
+    <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:"4rem"}}>
+          <FaArrowRight style={{fontSize:"2.5rem"}}/>
+        <h1>OUR CATEGORIES</h1>
+        <FaArrowLeft style={{fontSize:"2.5rem"}}/>
+
+        </div>
       <Container>
+        
+
         {cards.map((card, index) => (
           <Card key={index} onClick={() => handleCardClick(card.page)}>
             <Image bgImage={card.imageUrl} />
@@ -102,6 +111,8 @@ const ProductCards = () => {
           </Card>
         ))}
       </Container>
+
+      
       <Add />
       <CarouselHero />
       <FlashSale/>

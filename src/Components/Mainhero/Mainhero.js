@@ -13,6 +13,10 @@ import BrandCards from '../Herocards/BrandCards';
 import VetCare from '../Herocards/VetCare';
 import DemoReviews from '../Herocards/DemoReview';
 import PetStar from '../PetStar/PetStar';  // Import the PetStar component
+import Add from '../Herocards/Add';
+import ClothingEssentials from '../Clothing/Clothing';
+import BrandDetails from './BrandDetails';
+import ShopPage from '../Herocards/CatsAdPage';
 
 // Styled Components
 const AdContainer = styled.div`
@@ -86,7 +90,7 @@ const Mainhero = () => {
 
   // Function to handle "Shop Now" button click
   const handleShopNow = () => {
-    navigate("/pet-star");  // Navigate to the PetStar component
+    navigate("/PetStar");  // Navigate to the PetStar component
   };
 
   return (
@@ -105,11 +109,13 @@ const Mainhero = () => {
       <Routes>
         {/* Main routes */}
         <Route path="/" element={<ProductCards />} />  {/* Main product list */}
+        <Route path="/add" element={<Add />} />
+        <Route path="/clothing" element={<ClothingEssentials />} />
         <Route path="/dog-food" element={<DogFoodPage />} />  {/* Dog Food page */}
         <Route path="/cat-food" element={<CatFoodPage />} />  {/* Cat Food page */}
 
         {/* Other category routes */}
-        <Route path="/luxury" element={<HeroLuxe />} />
+        <Route path="/luxury " element={<HeroLuxe />} />
         <Route path="/pharmacy" element={<Pharmacy />} />
         <Route path="/cats-add" element={<CatsAdd />} />
         <Route path="/brands" element={<BrandCards />} />
@@ -117,9 +123,14 @@ const Mainhero = () => {
         <Route path="/reviews" element={<DemoReviews />} />
         
         {/* PetStar component route */}
-        <Route path="/pet-star" element={<PetStar />} />  {/* PetStar page */}
+        <Route path="/PetStar" element={<PetStar />} />
+        <Route path="/" element={<HeroLuxe/>} />  {/* Main page with the brand cards */}
+        <Route path="/brand/:brandId" element={<BrandDetails />}/> {/* PetStar page */}
+        <Route path="/" element={<CatsAdd />} />  {/* Main page with hero section */}
+        <Route path="/shop" element={<ShopPage />} />  {/* Shop page to display product cards */}
       </Routes>
-      <HeroLuxe />
+      <HeroLuxe /> 
+     
       <Pharmacy />
       <CatsAdd />
       <BrandCards />

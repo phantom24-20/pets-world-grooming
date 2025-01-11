@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
+import { useNavigate } from "react-router-dom";
 // Styled components
 
 const Container = styled.div`
@@ -72,31 +72,30 @@ const ShopButton = styled.button`
 const Add = () => {
   // Initialize state for button text
   const [buttonText, setButtonText] = useState("Shop Now");
+  const navigate = useNavigate(); // Initialize useNavigate
 
-  // Handle button click and change text
   const handleClick = () => {
-    setButtonText("Added to Cart");
+    setButtonText("Redirecting...");
+    navigate("/clothing"); // Navigate to the ClothingEssentials component
   };
 
   return (
     <Container>
-      {/* Navbar Section */}
-      <NavbarContainer>
-        <h1>Winter Essentials for Pets</h1>
-      </NavbarContainer>
-
-      {/* Hero Section */}
-      <HeroSection>
-        <HeroContent>
-          <HeroTitle>Shop Winter Essentials for Your Pets</HeroTitle>
-          <HeroDescription>
-            Keep your pets cozy and stylish with our range of winter clothing, accessories, and more!
-          </HeroDescription>
-          <ShopButton onClick={handleClick}>{buttonText}</ShopButton>
-        </HeroContent>
-      </HeroSection>
-    </Container>
-  );
+    <NavbarContainer>
+      <h1>Winter Essentials for Pets</h1>
+    </NavbarContainer>
+    <HeroSection>
+      <HeroContent>
+        <HeroTitle>Shop Winter Essentials for Your Pets</HeroTitle>
+        <HeroDescription>
+          Keep your pets cozy and stylish with our range of winter clothing, accessories, and more!
+        </HeroDescription>
+        <ShopButton onClick={handleClick}>{buttonText}</ShopButton>
+      </HeroContent>
+    </HeroSection>
+  </Container>
+);
 };
 
 export default Add;
+

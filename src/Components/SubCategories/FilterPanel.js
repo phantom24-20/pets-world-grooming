@@ -16,6 +16,8 @@ const FilterSection = styled.div`
   margin-bottom: 25px;
   padding-bottom: 15px;
   border-bottom: 1px solid #f0f0f0; /* Soft separator between sections */
+  height:10rem;
+  overflow:scroll;
 `;
 
 const FilterTitle = styled.h4`

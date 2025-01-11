@@ -25,6 +25,7 @@ const filterData = {
   priceRange: ['0-50', '51-100', '101-200', '201+'],
   flavor: ['Chicken', 'Lamb', 'Fish', 'Vegetables', 'Rice'],
   petType: ['Dogs', 'Cats'],
+  brand :['Royal Canin','Chip Chops','JerHigh','Pedigree','Farmina N&D','Drools','Gnawlers','SmartHeart','Fresh For Paws','Bark Out Loud','Dogsee','Henlo','Kennel Kitchen','Carniwel','Dogaholic','Farmina Vet Life','BLE','Goodies','First Bark','Purepet','Doggos','Basil','Drools VET PRO','Himalaya','Petstar','Signature','Vet-Pro','NPIC','Acana','Brunos', 'Wild Essentials']
 };
 
 const allProducts = [
@@ -45,6 +46,7 @@ const ProductPage = () => {
     priceRange: [],
     flavor: [],
     petType: [],
+    brand:[],
   });
   const [sortOrder, setSortOrder] = useState('relevance');
   const [products, setProducts] = useState(allProducts); // Start with all products

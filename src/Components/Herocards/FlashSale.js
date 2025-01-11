@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import Countdown from 'react-countdown';
 
 // // Sample images for items (replace with actual paths)
-// import dogTreatsImg from './assets/dog-treats.jpg';
-// import catToysImg from './assets/cat-toys.jpg';
+import dogTreatsImg from '../../assets/Flash sale/goodies/chknlvr.webp';
+import milkybone  from '../../assets/Flash sale/goodies/milkybone.webp';
 // import petAccessoriesImg from './assets/pet-accessories.jpg';
 // import dogToyImg from './assets/dog-toy.jpg';
 
@@ -174,8 +174,8 @@ const FlashSale = () => {
 
   // Items data
   const items = [
-    { id: 1, name: 'Dog Treats', image: "dogTreatsImg", price: '$9.99', originalPrice: '$14.99', discount: '30% OFF' },
-    { id: 2, name: 'Cat Toys', image: "catToysImg", price: '$5.99', originalPrice: '$8.99', discount: '33% OFF' },
+    { id: 1, name: 'Goodies Treat Chicken Liver', image: dogTreatsImg,quantity:'500gm', price: '₹375', originalPrice: '₹625', discount: '50% OFF' },
+    { id: 2, name: 'Goodies Milky Bone', image: milkybone,quantity:'228gm', price: '₹280', originalPrice: '₹350', discount: '15% OFF' },
     { id: 3, name: 'Pet Accessories', image: "petAccessoriesImg", price: '$19.99', originalPrice: '$24.99', discount: '20% OFF' },
     { id: 4, name: 'Dog Toy', image: "dogToyImg", price: '$11.99', originalPrice: '$15.99', discount: '25% OFF' },
     { id: 5, name: 'Cat Food', image: "dogTreatsImg", price: '$15.99', originalPrice: '$19.99', discount: '20% OFF' },
@@ -209,7 +209,9 @@ const FlashSale = () => {
           <ItemCard key={item.id}>
             <ItemImage src={item.image} alt={item.name} />
             <ItemDetails>
+              
               <ItemName>{item.name}</ItemName>
+              <div style={{fontWeight:"bold"}}>{item.quantity}</div>
               <ItemPrice>{item.price}</ItemPrice>
               <ItemDiscount>{item.originalPrice}</ItemDiscount>
               <p>{item.discount}</p>
