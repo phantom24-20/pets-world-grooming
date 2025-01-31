@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PrimarySearchAppBar from "../Searchbar/Searchbar";
 import PetStoreCategories from "./Navlinks";
 import LoginPage from "../LoginPage/LoginPage";
+import AccountsPage from '../AccountsPage/AccountsPage';
 import Cart from "../Cart/Cart";
 import SubCategoryPage from "../SubCategories/SubCategory";
 import {BrowserRouter as Router,Routes,Route} from "react-router-dom";
@@ -16,6 +17,15 @@ import CustomerDetails from '../Grooming/CustomerDetails';
 import GroomingFlow from '../Grooming/Grooming';
 import ConsultVet from '../SubCategories/ConsultVet/ConsultVet';
 import PetStar from '../PetStar/PetStar';
+import ConsumerDeatils from '../PetGrooming/ConsumerDetails';
+import PetDetails from '../PetGrooming/PetDetails';
+// import PackageSelection from '../PetGrooming/PackageSelection';
+import PackageAndAddOns from '../PetGrooming/PackageSelection';
+import AddOns from '../PetGrooming/AddOns';
+import GroomingSlots from '../PetGrooming/GroomingSlots';
+import PaymentPage from '../PetGrooming/PaymentPage';
+import ReviewsCarousel from '../PetGrooming/ReviewsCarousel';
+import BookingConfirmed from '../PetGrooming/BookingConfirmed';
 // import { Confirmation } from '../Grooming/ConfirmationPage';
 export const Navbar = () =>{
     const [cartItems, setCartItems] = useState([]);
@@ -24,6 +34,7 @@ export const Navbar = () =>{
 <Routes>
 <Route path="/" element={<PrimarySearchAppBar />} />
 <Route path="/login" element={<LoginPage />} />
+<Route path="/account" element={<AccountsPage/>} />
 <Route path="/cart"  target="_blank" element={<Cart cartItems={cartItems} setCartItems={setCartItems} />} />
 <Route path="/checkout" component={Checkout} />
 <Route path="/contact-us" element={<ContactUs />} />
@@ -36,7 +47,7 @@ export const Navbar = () =>{
         <Route path="/" element={<PetStoreCategories/>} />
         <Route path="/subcategory/:name"  target="_blank" element={<SubCategoryPage />} />
         <Route path="/cat/:name"  target="_blank" element={<Cat/>} />
-        <Route path="/deals/:name"  target="_blank" element={<LightningDealsPage/>} />
+        {/* <Route path="/deals/:name"  target="_blank" element={<LightningDealsPage/>} /> */}
         <Route path="/pharm/:name"  target="_blank" element={<MainPharmacy/>} />
         {/* <Route path="/slots/:name"  target="_blank" element={<GroomingPage/>} /> */}
 
@@ -46,8 +57,16 @@ export const Navbar = () =>{
          {/* <Route path="slots/:name" element={<CustomerDetails />} />
         <Route path="slots/grooming-packages" element={<GroomingPackages />} /> */}
         {/* <Route path="/confirmation" element={Confirmation} /> */}
-        <Route path="/pet-star" element={<PetStar />} />  
-        <Route path="/slots/:name" element={<GroomingFlow />} />
+        <Route path="/pet-star" element={<PetStar />} /> 
+        <Route path="/consumerDetails" element={<ConsumerDeatils/>} />
+        <Route path="/reviews" element={<ReviewsCarousel/>} />
+        <Route path="/pet-details" element={<PetDetails/>} />
+        <Route path="/package-selection" element={<PackageAndAddOns/>} />
+        <Route path="/add-ons" element={<AddOns/>} />
+        <Route path="/grooming-slots" element={<GroomingSlots/>} />
+        <Route path="/payment" element={<PaymentPage/>} />
+        <Route path ="/booking-confirmed" element={<BookingConfirmed/>}/>
+        {/* <Route path="/slots/:name" element={<GroomingFlow />} /> */}
         <Route path="/consult-vet" element={<ConsultVet/>} />
 
 

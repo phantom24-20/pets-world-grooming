@@ -4,6 +4,8 @@ import { BrowserRouter } from "react-router-dom";
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+<script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&components=buttons"></script>
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

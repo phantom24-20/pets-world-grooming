@@ -316,8 +316,10 @@
 
 // // export default App;
 
-import * as React from 'react';
+import React, { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -335,6 +337,7 @@ import { useNavigate } from 'react-router-dom';
 import SearchArea from '../SearchArea/SearchArea';
 import PincodeSearch from '../PincodeSearch/PinCodeSearch';
 import Logo from "../../assets/DALL·E 2024-12-22 13.20.56 - A circular logo design featuring a German Shepherd dog with straight ears, (1).jpg";
+import ToggleMenu from '../ToggleMenu/ToggleMenu';
 
 // Styled components for overlapping dropdowns
 const SearchWrapper = styled(Box)({
@@ -342,15 +345,6 @@ const SearchWrapper = styled(Box)({
   zIndex: 1,
 });
 
-// const SuggestionsContainer = styled('div')({
-//   position: 'absolute',
-//   top: '100%',
-//   left: 0,
-//   width: '100%',
-//   backgroundColor: 'white',
-//   boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-//   zIndex: 1200, // Ensures it overlaps hero and navbar
-// });
 const StyledSearchArea = styled('div')(({ theme }) => ({
   position: 'relative',
   flex: 1,
@@ -389,11 +383,14 @@ export default function PrimarySearchAppBar() {
   const [productQuery, setProductQuery] = React.useState('');
   const [pincodeQuery, setPincodeQuery] = React.useState('');
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [openLocationDialog, setOpenLocationDialog] = useState(false); // State for the location dialog
+  const [location, setLocation] = useState(null); // State to store the current location
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
+  const [isToggleMenuOpen, setIsToggleMenuOpen] = React.useState(false);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Use navigate from react-router-dom
+
   const handleProductSearch = (e) => {
     const query = e.target.value;
     setProductQuery(query);
@@ -420,6 +417,28 @@ export default function PrimarySearchAppBar() {
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+  const handleToggleMenu = () => {
+    setIsToggleMenuOpen(!isToggleMenuOpen); // Toggle the state when logo is clicked
+  };
+
+  const handleGetLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation({ latitude, longitude });
+          setOpenLocationDialog(false); // Close the dialog after getting location
+        },
+        (error) => {
+          alert('Error getting location: ' + error.message);
+          setOpenLocationDialog(false); // Close the dialog on error
+        }
+      );
+    } else {
+      alert('Geolocation is not supported by this browser.');
+      setOpenLocationDialog(false); // Close the dialog if geolocation is not supported
+    }
   };
 
   const handleMobileMenuClose = () => {
@@ -461,7 +480,8 @@ export default function PrimarySearchAppBar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={() => window.open('/login', '_blank')}>Login</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My Account</MenuItem>
+      {/* Navigate to AccountPage when 'My Account' is clicked */}
+      <MenuItem onClick={() => navigate('/account')}>My Account</MenuItem>
     </Menu>
   );
 
@@ -508,13 +528,19 @@ export default function PrimarySearchAppBar() {
   );
 
   return (
+    <>
+  
+
+   
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: '#2e3144' }}>
-        <Toolbar>
-          <img
+      <Toolbar>
+         <ToggleMenu />
+        <img
             src={Logo}
             alt="logo"
-            style={{ width: '4.5%', marginRight: '1rem', borderRadius: '30px', cursor: 'pointer' }}
+            style={{ width: '4.5%', marginRight: '1rem',marginLeft:"1rem", borderRadius: '30px', cursor: 'pointer' }}
+            onClick={handleToggleMenu}
           />
           <Typography
             variant="h6"
@@ -528,12 +554,6 @@ export default function PrimarySearchAppBar() {
             </div>
           </Typography>
 
-          {/* <SearchWrapper>
-            <SearchArea />
-            <SuggestionsContainer> */}
-              {/* Place your product search suggestion component here */}
-            {/* </SuggestionsContainer>
-          </SearchWrapper> */}
           <StyledSearchArea>
             <SearchInput
               type="text"
@@ -552,16 +572,7 @@ export default function PrimarySearchAppBar() {
             )}
           </StyledSearchArea>
 
-          {/* <SearchWrapper>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <PinDropIcon />
-              <PincodeSearch />
-            </div>
-            <SuggestionsContainer> */}
-              {/* Place your pincode suggestion component here */}
-            {/* </SuggestionsContainer>
-          </SearchWrapper> */}
-           <StyledSearchArea>
+          <StyledSearchArea>
             <SearchInput
               type="text"
               placeholder="Enter pincode..."
@@ -622,6 +633,25 @@ export default function PrimarySearchAppBar() {
       {renderMobileMenu}
       {renderMenu}
     </Box>
+    <Dialog open={openLocationDialog} onClose={() => setOpenLocationDialog(false)}>
+        <DialogTitle>Access Current Location</DialogTitle>
+        <DialogContent>
+          <Typography>
+            We need your current location to provide better services. Do you want to allow access to your location?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenLocationDialog(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleGetLocation} color="primary">
+            Allow
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+    </>
+
+    
   );
 }
-

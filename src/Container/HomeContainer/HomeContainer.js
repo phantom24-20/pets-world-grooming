@@ -1,4 +1,7 @@
 import React from "react";
+// import axios from "axios";
+// import React, { useEffect, useState } from 'react';
+// import { getProducts } from '../../api';
 import Mainhero from "../../Components/Mainhero/Mainhero"
 import { Navbar } from "../../Components/Navbar/Navbar";
 // import PetStar from "../../Components/PetStar/PetStar";
@@ -27,6 +30,35 @@ export const HomeContainer = () =>{
         {/* <MainPharmacy/> */}
         {/* <LightningDealsPage/> */}
         {/* <GroomingBookingApp/> */}
-        </>
-    )
+       </>
+            )
 }
+
+
+
+
+// import { useState, useEffect } from "react";
+
+// function HomeContainer() {
+//   const [products, setProducts] = useState([]);
+
+//   useEffect(() => {
+//     axios.get("http://localhost:5000/api/products")
+//       .then((res) => setProducts(res.data))
+//       .catch((err) => console.log(err));
+//   }, []);
+
+//   return (
+//     <div>
+//       {products.map((product) => (
+//         <div key={product._id}>
+//           <h3>{product.name}</h3>
+//           <p>{product.description}</p>
+//           <p>Price: ${product.price}</p>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// }
+
+// export default HomeContainer;

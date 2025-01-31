@@ -17,6 +17,8 @@ import Add from '../Herocards/Add';
 import ClothingEssentials from '../Clothing/Clothing';
 import BrandDetails from './BrandDetails';
 import ShopPage from '../Herocards/CatsAdPage';
+import MainFooter from '../Footer/Footer';
+import SocialMedia from '../SocialMedia/SocialMedia';
 
 // Styled Components
 const AdContainer = styled.div`
@@ -136,6 +138,9 @@ const Mainhero = () => {
       <BrandCards />
       <VetCare />
       <DemoReviews />
+      <SocialMedia/>
+      <MainFooter/>
+ 
     </div>
   );
 };

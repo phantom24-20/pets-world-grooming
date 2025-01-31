@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";  // Import useNavigate for progr
 import { FaArrowRight,FaArrowLeft } from "react-icons/fa";
 import Add from "./Add";
 import CarouselHero from "./Carousel";
-import FlashSale from "./FlashSale";
+// import FlashSale from "./FlashSale";
 
 // Styled Components
 const Container = styled.div`
@@ -115,7 +115,7 @@ const ProductCards = () => {
       
       <Add />
       <CarouselHero />
-      <FlashSale/>
+      {/* <FlashSale/> */}
     </>
   );
 };

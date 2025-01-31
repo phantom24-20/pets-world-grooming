@@ -25,7 +25,7 @@ const PetStoreCategories = () => {
             <SubCategoryList>
 
               <SubCategoryItem>
-              <StyledLink to="/slots/grooming-flow" target="_blank"
+              <StyledLink to="/consumerDetails" target="_blank"
               rel="noopener noreferrer">BOOK YOUR SLOTS</StyledLink>
                 </SubCategoryItem>
               {/* <SubCategoryItem>12:00 PM - 2:00 PM</SubCategoryItem>
