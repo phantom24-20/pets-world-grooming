@@ -19,6 +19,7 @@ import ConsultVet from '../SubCategories/ConsultVet/ConsultVet';
 import PetStar from '../PetStar/PetStar';
 import ConsumerDeatils from '../PetGrooming/ConsumerDetails';
 import PetDetails from '../PetGrooming/PetDetails';
+import Vaccination from "../ToggleMenu/Vaccination";
 // import PackageSelection from '../PetGrooming/PackageSelection';
 import PackageAndAddOns from '../PetGrooming/PackageSelection';
 import AddOns from '../PetGrooming/AddOns';
@@ -26,6 +27,8 @@ import GroomingSlots from '../PetGrooming/GroomingSlots';
 import PaymentPage from '../PetGrooming/PaymentPage';
 import ReviewsCarousel from '../PetGrooming/ReviewsCarousel';
 import BookingConfirmed from '../PetGrooming/BookingConfirmed';
+import BecomeInvestor from '../ToggleMenu/BecomeInvestor';
+import Merchandise from '../ToggleMenu/Merchandise';
 // import { Confirmation } from '../Grooming/ConfirmationPage';
 export const Navbar = () =>{
     const [cartItems, setCartItems] = useState([]);
@@ -47,7 +50,7 @@ export const Navbar = () =>{
         <Route path="/" element={<PetStoreCategories/>} />
         <Route path="/subcategory/:name"  target="_blank" element={<SubCategoryPage />} />
         <Route path="/cat/:name"  target="_blank" element={<Cat/>} />
-        {/* <Route path="/deals/:name"  target="_blank" element={<LightningDealsPage/>} /> */}
+        <Route path="/deals/:name"  target="_blank" element={<LightningDealsPage/>} />
         <Route path="/pharm/:name"  target="_blank" element={<MainPharmacy/>} />
         {/* <Route path="/slots/:name"  target="_blank" element={<GroomingPage/>} /> */}
 
@@ -69,8 +72,17 @@ export const Navbar = () =>{
         {/* <Route path="/slots/:name" element={<GroomingFlow />} /> */}
         <Route path="/consult-vet" element={<ConsultVet/>} />
 
-
-
+        
+{/*     
+      <Routes> */}
+       <Route path="/vaccination" element={<Vaccination/>} /> {/* Add route for Vaccination */}
+       <Route path="/BecomeInvestor" element={<BecomeInvestor/>} /> {/* Add route for Vaccination */}
+        <Route path="/Merchandise" element={<Merchandise/>} /> {/* Add route for Vaccination */}
+       
+        
+        {/* You can add other routes here */}
+      {/* </Routes> */}
+   
       </Routes>
   
         {/* <Router>

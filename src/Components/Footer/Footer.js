@@ -1,6 +1,5 @@
-// MainFooter.js
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom"; // Removed BrowserRouter import
+import { Routes, Route, Link } from "react-router-dom"; // Link for internal navigation
 import styled from "styled-components";
 
 // Styled Components for styling
@@ -24,16 +23,6 @@ const NavBar = styled.nav`
 `;
 
 const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: #000;
-  font-size: 1.2rem;
-  cursor: pointer;
-  &:hover {
-    color: #007bff;
-  }
-`;
-
-const ExternalLink = styled.a`
   text-decoration: none;
   color: #000;
   font-size: 1.2rem;
@@ -100,6 +89,7 @@ const PrivacyPolicy = () => (
     <p>Your privacy is important to us. We will never share your personal information without your consent.</p>
   </Content>
 );
+
 const ReturnPolicy = () => (
   <Content>
     <h2>Exchange And Return Policy</h2>
@@ -113,29 +103,21 @@ const MainFooter = () => (
     <Header>Pets World Grooming</Header>
     <NavBar>
       <StyledLink to="/about-us">About Us</StyledLink>
-      <ExternalLink href="/faq" target="_blank" rel="noopener noreferrer">
-        FAQ
-      </ExternalLink>
-      <ExternalLink href="/terms" target="_blank" rel="noopener noreferrer">
-        Terms and Conditions
-      </ExternalLink>
+      <StyledLink to="/faq">FAQ</StyledLink>
+      <StyledLink to="/terms">Terms and Conditions</StyledLink>
       <StyledLink to="/privacy-policy">Privacy Policy</StyledLink>
-      <ExternalLink href="/exchange" target="_blank" rel="noopener noreferrer">
-        Exchange And Return Policy
-      </ExternalLink>
+      <StyledLink to="/exchange">Exchange And Return Policy</StyledLink>
     </NavBar>
 
+    {/* Define routes for each of the components */}
     <Routes>
       <Route path="/about-us" element={<AboutUs />} />
       <Route path="/faq" element={<FAQ />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       <Route path="/exchange" element={<ReturnPolicy />} />
-
-      <Route
-        path="/"
-        element={<h2>Welcome to Pets World Grooming! Please choose an option from the menu.</h2>}
-      />
+      {/* Default route */}
+      <Route path="/" element={<h2>Welcome to Pets World Grooming! Please choose an option from the menu.</h2>} />
     </Routes>
 
     <Footer>

@@ -1,13 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-
-// Sample Product Data
-const products = [
-  { id: 1, name: "Dog Food - Chicken", brand: "Pet Star", variety: "Dry", price: 20, popularity: 5, type: "Dog" },
-  { id: 2, name: "Cat Food - Tuna", brand: "Pet Star", variety: "Wet", price: 15, popularity: 4, type: "Cat" },
-  { id: 3, name: "Dog Food - Beef", brand: "Pet Star", variety: "Wet", price: 25, popularity: 5, type: "Dog" },
-  { id: 4, name: "Cat Food - Chicken", brand: "Pet Star", variety: "Dry", price: 18, popularity: 3, type: "Cat" },
-];
+import axios from "axios";
 
 // Styled Components
 const Container = styled.div`
@@ -22,18 +15,6 @@ const Header = styled.h1`
   color: #333;
   font-size: 2.5rem;
   margin-bottom: 30px;
-`;
-
-const Banner = styled.div`
-  background-color: #f5f5dc;
-  padding: 15px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-  font-size: 1.2rem;
-  font-weight: bold;
 `;
 
 const FiltersContainer = styled.div`
@@ -71,47 +52,40 @@ const ProductCard = styled.div`
   }
 `;
 
-const ProductImage = styled.div`
-  height: 150px;
-  background-color: #f0f0f0;
-  margin-bottom: 20px;
+const ProductImage = styled.img`
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
   border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5rem;
-  color: #ccc;
-`;
-
-const ProductDetails = styled.div`
-  margin-bottom: 20px;
 `;
 
 const ProductName = styled.h3`
-  font-size: 1.5rem;
-  margin: 10px 0;
-  color: #333;
-`;
-
-const ProductPrice = styled.p`
-  font-size: 1.2rem;
-  color: #007bff;
+  font-size: 1.1rem;
   font-weight: bold;
+  color: #333;
+  margin: 10px 0;
 `;
 
-const Button = styled.button`
-  background-color: #007bff;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
+const ProductDetail = styled.p`
+  font-size: 0.9rem;
+  color: #666;
+  margin: 5px 0;
+`;
 
-  &:hover {
-    background-color: #0056b3;
+const Price = styled.p`
+  font-size: 0.9rem;
+  color: #666;
+
+  span {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9rem;
   }
+`;
+
+const DealPrice = styled.p`
+  font-weight: bold;
+  color: #e74c3c;
 `;
 
 const QuantityControls = styled.div`
@@ -137,6 +111,21 @@ const QuantityControls = styled.div`
   span {
     font-size: 1.2rem;
     margin: 0 10px;
+  }
+`;
+
+const Button = styled.button`
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
   }
 `;
 
@@ -170,13 +159,32 @@ const CartButton = styled(Button)`
   }
 `;
 
+const DiscountBadge = ({ discount }) => (
+  <span className="bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded-lg shadow-md">
+    🔥 {discount} OFF
+  </span>
+);
+
 const PetStar = () => {
+  const [products, setProducts] = useState([]);
   const [selectedVariety, setSelectedVariety] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [sortOption, setSortOption] = useState("");
   const [cart, setCart] = useState([]);
 
-  // Filter products based on selected variety and type
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/products")
+      .then(response => {
+        const petStarProducts = response.data.filter(product =>
+          product.brand.toLowerCase().includes("petstar")
+        );
+        setProducts(petStarProducts); 
+      })
+      .catch(error => {
+        console.error("There was an error fetching the products:", error);
+      });
+  }, []);
+
   const filteredProducts = products
     .filter(
       (product) =>
@@ -184,47 +192,40 @@ const PetStar = () => {
         (!selectedType || product.type === selectedType)
     )
     .sort((a, b) => {
-      if (sortOption === "price-asc") return a.price - b.price;
-      if (sortOption === "price-desc") return b.price - a.price;
+      if (sortOption === "price-asc") return a.dealPrice - b.dealPrice;
+      if (sortOption === "price-desc") return b.dealPrice - a.dealPrice;
       if (sortOption === "popularity") return b.popularity - a.popularity;
       return 0;
     });
 
-  // Add product to cart
   const addToCart = (product) => {
-    const existingProduct = cart.find((item) => item.id === product.id);
+    const existingProduct = cart.find((item) => item.id === product._id);
     if (existingProduct) {
       setCart(cart.map((item) =>
-        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
       ));
     } else {
       setCart([...cart, { ...product, quantity: 1 }]);
     }
   };
 
-  // Remove product from cart
   const removeFromCart = (product) => {
-    const existingProduct = cart.find((item) => item.id === product.id);
+    const existingProduct = cart.find((item) => item.id === product._id);
     if (existingProduct && existingProduct.quantity > 1) {
       setCart(cart.map((item) =>
-        item.id === product.id ? { ...item, quantity: item.quantity - 1 } : item
+        item._id === product._id ? { ...item, quantity: item.quantity - 1 } : item
       ));
     } else {
-      setCart(cart.filter((item) => item.id !== product.id));
+      setCart(cart.filter((item) => item._id !== product._id));
     }
   };
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalCost = cart.reduce((sum, item) => sum + item.quantity * item.price, 0);
+  const totalCost = cart.reduce((sum, item) => sum + item.quantity * item.dealPrice, 0);
 
   return (
     <Container>
       <Header>Pet Star Supplies</Header>
-
-      <Banner>
-        <div>Total Items in Cart: {totalItems}</div>
-        <div>Total Cost: ${totalCost.toFixed(2)}</div>
-      </Banner>
 
       <FiltersContainer>
         <Filter>
@@ -256,37 +257,47 @@ const PetStar = () => {
 
       <ProductContainer>
         {filteredProducts.map((product) => (
-          <ProductCard key={product.id}>
-            <ProductImage>Image</ProductImage>
-            <ProductDetails>
-              <ProductName>{product.name}</ProductName>
-              <p>Brand: {product.brand}</p>
-              <p>Variety: {product.variety}</p>
-              <p>Type: {product.type}</p>
-              <ProductPrice>${product.price}</ProductPrice>
-            </ProductDetails>
+          <ProductCard key={product._id}>
+            <ProductImage src={product.image} alt={product.name} />
+            <ProductName>{product.name}</ProductName>
+            <ProductDetail>Brand: {product.brand}</ProductDetail>
+            <ProductDetail>Weight: {product.weight}</ProductDetail>
+            <Price>MRP: <span>₹{product.originalPrice}</span></Price>
+            <DiscountBadge discount={product.discount} />
+            <DealPrice>Deal Price: ₹{product.dealPrice}</DealPrice>
+
             <QuantityControls>
               <button onClick={() => removeFromCart(product)}>-</button>
-              <span>{cart.find((item) => item.id === product.id)?.quantity || 0}</span>
+              <span>{cart.find((item) => item._id === product._id)?.quantity || 0}</span>
               <button onClick={() => addToCart(product)}>+</button>
             </QuantityControls>
-            <Button onClick={() => addToCart(product)}>Add to Cart</Button>
+<div style={{display:"flex",alignItems:"center",justifyContent:"space-around"}}>
+<Button onClick={() => addToCart(product)}>Add to Cart</Button>
+<Button className="wishlist-btn">❤️</Button>
+</div>
+            
           </ProductCard>
         ))}
       </ProductContainer>
 
-      {cart.length > 0 && (
-        <CartContainer>
-          <h3>Cart</h3>
+      {/* <CartContainer>
+        <h3>Shopping Cart</h3>
+        <div>
           {cart.map((item) => (
-            <CartItem key={item.id}>
-              <span>{item.name} x{item.quantity}</span>
-              <span>${(item.quantity * item.price).toFixed(2)}</span>
+            <CartItem key={item._id}>
+              <div>{item.name} (x{item.quantity})</div>
+              <div>₹{item.dealPrice * item.quantity}</div>
             </CartItem>
           ))}
-          <CartButton onClick={() => alert("Proceed to Checkout")}>Checkout</CartButton>
-        </CartContainer>
-      )}
+        </div>
+        <div>
+          <strong>Total Items: {totalItems}</strong>
+        </div>
+        <div>
+          <strong>Total Cost: ₹{totalCost}</strong>
+        </div>
+        <CartButton>Proceed to Checkout</CartButton>
+      </CartContainer> */}
     </Container>
   );
 };

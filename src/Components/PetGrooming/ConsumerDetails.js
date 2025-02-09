@@ -1,14 +1,18 @@
 // src/components/CustomerDetails.js
 import React, { useState } from 'react';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+// import LoginPage from "../../assets/Grooming login.png";  // Ensure the image path is correct
 
-const FormWrapper = styled.div`
+const LoginPage = require("../../assets/gp.jpg");
+const FormWrapper = styled('div')`
   width: 100%;
   max-width: 500px;  /* Limit the width for larger screens */
   margin: 40px auto;  /* Center the form with some space at the top */
   padding: 30px;
-  background-color: #fff;
+ background: url(${LoginPage}) no-repeat center center;
+  background-size: cover;  /* Ensure the image covers the full container */
+  background-position: center;  /* Center the image */
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -74,8 +78,7 @@ const Button = styled.button`
   }
 `;
 
-
-const ConsumerDeatils = () => {
+const ConsumerDetails = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
@@ -101,17 +104,16 @@ const ConsumerDeatils = () => {
     if (!formData.address) newErrors.address = 'Address is required.';
 
     if (Object.keys(newErrors).length === 0) {
-        // Navigate to the next page and pass customer details as state
-        navigate('/reviews', { state: { customerData: formData } });
-      } else {
-        setErrors(newErrors);
-      }
-    
+      // Navigate to the next page and pass customer details as state
+      navigate('/reviews', { state: { customerData: formData } });
+    } else {
+      setErrors(newErrors);
+    }
   };
 
   return (
     <FormWrapper>
-      <h2>Customer Details</h2>
+      {/* <h2>Customer Details</h2> */}
       <Input 
         type="text" 
         name="name" 
@@ -149,4 +151,4 @@ const ConsumerDeatils = () => {
   );
 };
 
-export default ConsumerDeatils;
+export default ConsumerDetails;

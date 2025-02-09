@@ -138,8 +138,9 @@ const Mainhero = () => {
       <BrandCards />
       <VetCare />
       <DemoReviews />
-      <SocialMedia/>
+    
       <MainFooter/>
+      <SocialMedia/>
  
     </div>
   );

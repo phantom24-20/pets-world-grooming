@@ -93,7 +93,7 @@ const BookingConfirmed = () => {
   
   const handleReturnHome = () => {
     // Redirect to the home page or main grooming page
-    history.push('/');
+    history.push('"/consumerDetails');
   };
 
   return (

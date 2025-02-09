@@ -5,7 +5,15 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import YouTubeIcon from '@mui/icons-material/YouTube';
+import styled from "styled-components";
 
+const Footer = styled.footer`
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1rem;
+  color: #888;
+  padding: 20px;
+`;
 const SocialMedia = () => {
   return (
     <Box
@@ -20,9 +28,9 @@ const SocialMedia = () => {
     >
       <Container maxWidth="lg">
         <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="body1" sx={{ marginBottom: '10px' }}>
+          {/* <Typography variant="body1" sx={{ marginBottom: '10px' }}>
             © 2025 PETS WORLD GROOMING | All Rights Reserved
-          </Typography>
+          </Typography> */}
           <Divider sx={{ marginBottom: '10px', backgroundColor: 'white' }} />
 
           <Box>
@@ -71,6 +79,9 @@ const SocialMedia = () => {
           <Typography variant="body2" sx={{ marginTop: '10px' }}>
             Paws and Claws, Love without Flaws
           </Typography>
+          <Footer>
+      <p>&copy; 2025 Pets World Grooming. All rights reserved.</p>
+    </Footer>
         </Box>
       </Container>
     </Box>

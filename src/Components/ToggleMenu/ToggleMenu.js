@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom"; // Import react-router-dom for navigation
 import { IoMenu } from "react-icons/io5";
-import Vaccination from "./Vaccination";
 
 const ToggleMenuContainer = styled.div`
   position: fixed;
@@ -33,7 +32,6 @@ const MenuOverlay = styled.div`
 `;
 
 const ToggleButton = styled.button`
-//   position: absolute;
   top: 20px;
   left: 20px;
   background-color: #434190;
@@ -70,12 +68,12 @@ const MenuLink = styled.a`
 
 const ToggleMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const history = useNavigate();
+  const navigate = useNavigate(); // Use navigate for navigation
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const navigateTo = (path) => {
-    window.open(path, "_blank"); // Opens in a new tab
+    navigate(path); // Navigate using react-router-dom
   };
 
   return (
@@ -86,16 +84,16 @@ const ToggleMenu = () => {
         <MenuLink onClick={() => navigateTo("https://example.com/about-us")}>
           About Us
         </MenuLink>
-        <MenuLink onClick={() => navigateTo(<Vaccination/>)}>
+        <MenuLink onClick={() => navigateTo("/vaccination")}> {/* Navigate to the Vaccination page */}
           Want to Get Your Pet Vaccinated?
         </MenuLink>
         <MenuLink onClick={() => navigateTo("https://example.com/notification-preferences")}>
           Notification Preferences
         </MenuLink>
-        <MenuLink onClick={() => navigateTo("https://example.com/become-an-investor")}>
+        <MenuLink onClick={() => navigateTo("/BecomeInvestor")}>
           Become an Investor
         </MenuLink>
-        <MenuLink onClick={() => navigateTo("https://example.com/merchandise")}>
+        <MenuLink onClick={() => navigateTo("/Merchandise")}>
           Merchandise
         </MenuLink>
         <MenuLink onClick={() => navigateTo("https://example.com/paawvana-donation")}>

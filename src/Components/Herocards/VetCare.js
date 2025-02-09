@@ -4,15 +4,28 @@ import styled from 'styled-components';
 const VetCare = () => {
   const [prescription, setPrescription] = useState(null);
   
+  // Separate states to track the upload success message for each card
+  const [uploadStatusCard1, setUploadStatusCard1] = useState('');
+  const [uploadStatusCard2, setUploadStatusCard2] = useState('');
+
   // State to track the visibility of the contact info for each card
   const [showContactInfo, setShowContactInfo] = useState({
     card1: false,
     card2: false,
   });
 
-  const handlePrescriptionUpload = (event) => {
+  const handlePrescriptionUpload = (event, card) => {
     const file = event.target.files[0];
     setPrescription(file);
+
+    // Set upload success message based on the card
+    if (file) {
+      if (card === 'card1') {
+        setUploadStatusCard1('Upload Successful for Get Your Pet Supplies Delivered!');
+      } else if (card === 'card2') {
+        setUploadStatusCard2('Upload Successful for Get Instant Advice!');
+      }
+    }
   };
 
   const toggleContactInfo = (card) => {
@@ -28,13 +41,14 @@ const VetCare = () => {
         <CardSection bgColor="#81b8cc">
           <Title>Get Your Pet Supplies Delivered</Title>
           <UploadSection>
-            <InputLabel htmlFor="upload-prescription">Upload Prescription</InputLabel>
+            <InputLabel htmlFor="upload-prescription-card1">Upload Prescription</InputLabel>
             <InputFile
-              id="upload-prescription"
+              id="upload-prescription-card1"
               type="file"
-              onChange={handlePrescriptionUpload}
+              onChange={(e) => handlePrescriptionUpload(e, 'card1')}
             />
             {prescription && <FileName>{prescription.name}</FileName>}
+            {uploadStatusCard1 && <SuccessMessage>{uploadStatusCard1}</SuccessMessage>} {/* Display success for card1 */}
           </UploadSection>
           <ContactButton onClick={() => toggleContactInfo('card1')}>Contact Us</ContactButton>
           {showContactInfo.card1 && (
@@ -48,13 +62,14 @@ const VetCare = () => {
         <CardSection bgColor="#81b8cc">
           <Title>Get Instant Advice</Title>
           <UploadSection>
-            <InputLabel htmlFor="upload-prescription">Upload Prescription</InputLabel>
+            <InputLabel htmlFor="upload-prescription-card2">Upload Prescription</InputLabel>
             <InputFile
-              id="upload-prescription"
+              id="upload-prescription-card2"
               type="file"
-              onChange={handlePrescriptionUpload}
+              onChange={(e) => handlePrescriptionUpload(e, 'card2')}
             />
             {prescription && <FileName>{prescription.name}</FileName>}
+            {uploadStatusCard2 && <SuccessMessage>{uploadStatusCard2}</SuccessMessage>} {/* Display success for card2 */}
           </UploadSection>
           <ContactButton onClick={() => toggleContactInfo('card2')}>Contact Us</ContactButton>
           {showContactInfo.card2 && (
@@ -125,6 +140,13 @@ const FileName = styled.p`
   font-size: 0.9rem;
   color: #555;
   margin-top: 0.5rem;
+`;
+
+const SuccessMessage = styled.p`
+  color: green;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  font-weight: bold;
 `;
 
 const ContactButton = styled.button`

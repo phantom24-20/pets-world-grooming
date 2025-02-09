@@ -348,6 +348,7 @@ const SearchWrapper = styled(Box)({
 const StyledSearchArea = styled('div')(({ theme }) => ({
   position: 'relative',
   flex: 1,
+  display:'flex',
   marginRight: theme.spacing(2),
   marginLeft: theme.spacing(3),
 }));
@@ -378,37 +379,94 @@ const SearchInput = styled('input')`
 `;
 
 export default function PrimarySearchAppBar() {
-  const [productSuggestions, setProductSuggestions] = React.useState([]);
+  const [productSuggestions, setProductSuggestions] = useState([]);
+  const [productQuery, setProductQuery] = useState('');
   const [pincodeSuggestions, setPincodeSuggestions] = React.useState([]);
-  const [productQuery, setProductQuery] = React.useState('');
+  // const [productQuery, setProductQuery] = React.useState('');
   const [pincodeQuery, setPincodeQuery] = React.useState('');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openLocationDialog, setOpenLocationDialog] = useState(false); // State for the location dialog
   const [location, setLocation] = useState(null); // State to store the current location
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [selectedCountry, setSelectedCountry] = useState("in"); // Default is India
   const [isToggleMenuOpen, setIsToggleMenuOpen] = React.useState(false);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const navigate = useNavigate(); // Use navigate from react-router-dom
 
-  const handleProductSearch = (e) => {
+  let debounceTimeout;
+
+const handleProductSearch = (e) => {
+  const query = e.target.value;
+  setProductQuery(query);
+
+  clearTimeout(debounceTimeout);
+
+  if (query) {
+    debounceTimeout = setTimeout(async () => {
+      try {
+        const response = await fetch(`https://api.yourbackend.com/products/search?q=${encodeURIComponent(query)}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        setProductSuggestions(data.products);
+      } catch (error) {
+        console.error('Error fetching product suggestions:', error);
+        setProductSuggestions([]);
+      }
+    }, 300); // Adjust the delay as needed
+  } else {
+    setProductSuggestions([]);
+  }
+};
+
+
+  // Function to handle pincode search and show suggestions
+  const handlePincodeSearch = async (e) => {
     const query = e.target.value;
-    setProductQuery(query);
-    if (query) {
-      setProductSuggestions(['Product 1', 'Product 2', 'Product 3']); // Example suggestions
-    } else {
-      setProductSuggestions([]);
+    setPincodeQuery(query);
+    
+    if (query.length < 3) {
+      setPincodeSuggestions([]); // Clear suggestions if query is too short
+      return;
+    }
+    
+    try {
+      let response;
+      let data;
+      let suggestions = [];
+  
+      if (selectedCountry === "in" && /^\d{6}$/.test(query)) {
+        // Fetch data for Indian Pincode
+        response = await fetch(`https://api.postalpincode.in/pincode/${query}`);
+        data = await response.json();
+  
+        if (data[0]?.PostOffice) {
+          suggestions = data[0].PostOffice.map((item) => item.Name);
+        }
+      } else {
+        // Fetch data for International Pincode
+        response = await fetch(`https://api.zippopotam.us/${selectedCountry}/${query}`);
+        data = await response.json();
+  
+        if (data.places) {
+          suggestions = data.places.map((place) => `${place["place name"]}, ${place.state}`);
+        }
+      }
+  
+      // Update state with suggestions
+      setPincodeSuggestions(suggestions.length ? suggestions : ["No results found"]);
+    } catch (error) {
+      console.error("Error fetching pincode details:", error);
+      setPincodeSuggestions(["Error fetching data"]);
     }
   };
 
-  const handlePincodeSearch = (e) => {
-    const query = e.target.value;
-    setPincodeQuery(query);
-    if (query) {
-      setPincodeSuggestions(['110001', '110002', '110003']); // Example pincodes
-    } else {
-      setPincodeSuggestions([]);
-    }
+  // Function to handle suggestion selection
+  const handleSuggestionSelect = (suggestion) => {
+    setPincodeQuery(suggestion); // Set selected suggestion to the input field
+    setPincodeSuggestions([]); // Clear suggestions after selection
   };
 
   const handleNavigate = (route) => {
@@ -556,39 +614,56 @@ export default function PrimarySearchAppBar() {
 
           <StyledSearchArea>
             <SearchInput
-              type="text"
-              placeholder="Search products..."
-              value={productQuery}
-              onChange={handleProductSearch}
+               type="text"
+               placeholder="Search products..."
+               value={productQuery}
+               onChange={handleProductSearch}
             />
-            {productSuggestions.length > 0 && (
+           {productSuggestions.length > 0 && (
               <SuggestionsContainer>
-                {productSuggestions.map((product, index) => (
-                  <div key={index} style={{ padding: '8px 16px', cursor: 'pointer' }}>
-                    {product}
+                {productSuggestions.map((product) => (
+                  <div style={{ padding: '8px 16px', cursor: 'pointer' }} key={product.id}>
+                  {product.name}
                   </div>
                 ))}
               </SuggestionsContainer>
             )}
           </StyledSearchArea>
 
-          <StyledSearchArea>
-            <SearchInput
-              type="text"
-              placeholder="Enter pincode..."
-              value={pincodeQuery}
-              onChange={handlePincodeSearch}
-            />
-            {pincodeSuggestions.length > 0 && (
-              <SuggestionsContainer>
-                {pincodeSuggestions.map((pincode, index) => (
-                  <div key={index} style={{ padding: '8px 16px', cursor: 'pointer' }}>
-                    {pincode}
-                  </div>
-                ))}
-              </SuggestionsContainer>
-            )}
-          </StyledSearchArea>
+          <StyledSearchArea style={{color:"black"}}>
+        <select 
+          value={selectedCountry} 
+          onChange={(e) => setSelectedCountry(e.target.value)}
+          style={{ padding: "8px", marginRight: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
+        >
+          <option value="in">🇮🇳 India</option>
+          <option value="us">🇺🇸 USA</option>
+          <option value="uk">🇬🇧 UK</option>
+          <option value="ca">🇨🇦 Canada</option>
+          <option value="au">🇦🇺 Australia</option>
+        </select>
+
+        <SearchInput
+          type="text"
+          placeholder="Enter pincode..."
+          value={pincodeQuery}
+          onChange={handlePincodeSearch}
+        />
+        
+        {pincodeSuggestions.length > 0 && (
+          <SuggestionsContainer>
+            {pincodeSuggestions.map((pincode, index) => (
+              <div
+                key={index}
+                style={{ padding: '8px 16px', cursor: 'pointer' }}
+                onClick={() => handleSuggestionSelect(pincode)}
+              >
+                {pincode}
+              </div>
+            ))}
+          </SuggestionsContainer>
+        )}
+      </StyledSearchArea>
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

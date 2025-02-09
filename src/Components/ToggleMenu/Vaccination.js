@@ -93,13 +93,12 @@ const Vaccination = () => {
 
   return (
     <Container>
-      <Title>Has your pet been vaccinated?</Title>
-      <QuestionWrapper>
+      <Title> Want to Get Your Pet Vaccinated?</Title>
+      {/* <QuestionWrapper>
         <Button onClick={() => handleVaccinationAnswer(true)}>Yes</Button>
         <Button onClick={() => handleVaccinationAnswer(false)}>No</Button>
-      </QuestionWrapper>
+      </QuestionWrapper> */}
 
-      {hasVaccinated !== null && (
         <InputWrapper>
           <h3>Enter your contact details</h3>
           <Input
@@ -118,7 +117,7 @@ const Vaccination = () => {
           />
           <Button onClick={handleSubmit}>Submit</Button>
         </InputWrapper>
-      )}
+ 
     </Container>
   );
 };

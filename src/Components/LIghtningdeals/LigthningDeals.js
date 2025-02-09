@@ -1,57 +1,6 @@
-// // import React, { useState } from "react";
-// import axios from "axios"; 
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
 // import styled from "styled-components";
-// import React, { useEffect, useState } from 'react';
-
-
-// // Sample Data for Products
-// const products = [
-//   {
-//     id: 1,
-//     name: "Dog Food - Chicken",
-//     brand: "Brand A",
-//     type: "Food",
-//     petType: "Dog",
-//     weight: "5kg",
-//     originalPrice: 500,
-//     dealPrice: 400,
-//     image: "https://via.placeholder.com/150",
-//   },
-//   {
-//     id: 2,
-//     name: "Cat Toy - Ball",
-//     brand: "Brand B",
-//     type: "Toys",
-//     petType: "Cat",
-//     weight: null,
-//     originalPrice: 200,
-//     dealPrice: 150,
-//     image: "https://via.placeholder.com/150",
-//   },
-//   {
-//     id: 3,
-//     name: "Dog Collar - Leather",
-//     brand: "Brand C",
-//     type: "Accessories",
-//     petType: "Dog",
-//     weight: null,
-//     originalPrice: 350,
-//     dealPrice: 250,
-//     image: "https://via.placeholder.com/150",
-//   },
-//   {
-//     id: 4,
-//     name: "Wet Cat Food - Tuna",
-//     brand: "Brand D",
-//     type: "Food",
-//     petType: "Cat",
-//     weight: "1kg",
-//     originalPrice: 300,
-//     dealPrice: 230,
-//     image: "https://via.placeholder.com/150",
-//   },
-//   // More products can be added here...
-// ];
 
 // // Styled Components
 // const PageContainer = styled.div`
@@ -122,7 +71,7 @@
 
 // const DealPrice = styled.span`
 //   font-weight: bold;
-//   color:#8B0000;
+//   color: #8B0000;
 // `;
 
 // const AddToCartButton = styled.button`
@@ -207,27 +156,17 @@
 //   const [products, setProducts] = useState([]);
 //   const [cart, setCart] = useState([]);
 //   const [showCart, setShowCart] = useState(false);
-//   const [filter, setFilter] = useState({
-//     brand: [],
-//     type: [],
-//     petType: [],
-//   });
+//   const [selectedCategory, setSelectedCategory] = useState("All");
 
-//   const handleFilterChange = (category, value) => {
-//     setFilter((prev) => ({
-//       ...prev,
-//       [category]: prev[category].includes(value)
-//         ? prev[category].filter((item) => item !== value)
-//         : [...prev[category], value],
-//     }));
-//   };
 //   useEffect(() => {
-//     // Fetch products from the backend
 //     axios
-//       .get("http://localhost:5000/api/products") // Backend API URL
+//       .get("http://localhost:5000/api/products", {
+//         params: { category: "lightningDeals" }, // Ensure correct case
+//       })
 //       .then((response) => setProducts(response.data))
 //       .catch((error) => console.error("Failed to fetch products", error));
 //   }, []);
+  
 
 //   const handleAddToCart = (product, quantity) => {
 //     setCart((prev) => [
@@ -240,67 +179,73 @@
 //     setShowCart(!showCart);
 //   };
 
-//   const filteredProducts = products.filter(
-//     (product) =>
-//       (filter.brand.length === 0 || filter.brand.includes(product.brand)) &&
-//       (filter.type.length === 0 || filter.type.includes(product.type)) &&
-//       (filter.petType.length === 0 || filter.petType.includes(product.petType))
-//   );
+//   const handleCategoryChange = (category) => {
+//     setSelectedCategory(category);
+//   };
+
+//   const filteredProducts = products.filter((product) => product.type === "lightningDeals");
+
 
 //   return (
 //     <PageContainer>
+//       {/* Sidebar with Category Filters */}
 //       <Sidebar>
 //         <FilterSection>
-//           <FilterTitle>Filter by Brand</FilterTitle>
+//           <FilterTitle>Categories</FilterTitle>
 //           <FilterCheckbox>
 //             <input
-//               type="checkbox"
-//               onChange={() => handleFilterChange("brand", "Brand A")}
+//               type="radio"
+//               name="category"
+//               value="All"
+//               checked={selectedCategory === "All"}
+//               onChange={() => handleCategoryChange("All")}
 //             />
-//             Brand A
+//             All
 //           </FilterCheckbox>
 //           <FilterCheckbox>
 //             <input
-//               type="checkbox"
-//               onChange={() => handleFilterChange("brand", "Brand B")}
+//               type="radio"
+//               name="category"
+//               value="Dog"
+//               checked={selectedCategory === "Dog"}
+//               onChange={() => handleCategoryChange("Dog")}
 //             />
-//             Brand B
-//           </FilterCheckbox>
-//           {/* More brand options */}
-//         </FilterSection>
-
-//         <FilterSection>
-//           <FilterTitle>Filter by Pet Type</FilterTitle>
-//           <FilterCheckbox>
-//             <input
-//               type="checkbox"
-//               onChange={() => handleFilterChange("petType", "Dog")}
-//             />
-//             Dog
+//             Dog Products
 //           </FilterCheckbox>
 //           <FilterCheckbox>
 //             <input
-//               type="checkbox"
-//               onChange={() => handleFilterChange("petType", "Cat")}
+//               type="radio"
+//               name="category"
+//               value="Cat"
+//               checked={selectedCategory === "Cat"}
+//               onChange={() => handleCategoryChange("Cat")}
 //             />
-//             Cat
+//             Cat Products
 //           </FilterCheckbox>
-//           {/* More pet type options */}
+//           <FilterCheckbox>
+//             <input
+//               type="radio"
+//               name="category"
+//               value="Lightning Deals"
+//               checked={selectedCategory === "Lightning Deals"}
+//               onChange={() => handleCategoryChange("Lightning Deals")}
+//             />
+//             Lightning Deals
+//           </FilterCheckbox>
 //         </FilterSection>
 //       </Sidebar>
 
+//       {/* Main Content - Products Display */}
 //       <div>
-//         <h1>Lightning Deals</h1>
+//         <h1>{selectedCategory === "All" ? "All Products" : selectedCategory}</h1>
 //         <DealsContainer>
 //           {filteredProducts.map((product) => (
 //             <ProductCard key={product.id}>
-
 //               <ProductImage src={product.image} alt={product.name} />
 //               <ProductName>{product.brand}</ProductName>
 //               <ProductName>{product.name}</ProductName>
 //               <PriceSection>
 //                 <OriginalPrice>₹{product.originalPrice}</OriginalPrice>
-//                 <div style={{fontWeight:"bold",color:"green"}}>{product.discount}</div>
 //                 <DealPrice>{product.dealPrice ? `₹${product.dealPrice}` : ""}</DealPrice>
 //               </PriceSection>
 //               {product.weight && <p>Weight: {product.weight}</p>}
@@ -308,11 +253,7 @@
 //                 <label>Quantity:</label>
 //                 <input type="number" defaultValue={1} min={1} max={3} />
 //               </div>
-//               <AddToCartButton
-//                 onClick={() =>
-//                   handleAddToCart(product, 1) // Add logic to handle quantity selection
-//                 }
-//               >
+//               <AddToCartButton onClick={() => handleAddToCart(product, 1)}>
 //                 Add to Cart
 //               </AddToCartButton>
 //             </ProductCard>
@@ -327,3 +268,100 @@
 // };
 
 // export default LightningDealsPage;
+
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import ProductList from "../SubCategories/ProductList";
+import SortOptions from "../SubCategories/SortOption";
+import FilterPanel from "../SubCategories/FilterPanel";
+
+const LightningDealsPage = () => {
+  const [products, setProducts] = useState([]);
+  const [sortedProducts, setSortedProducts] = useState([]);
+  const [sortOrder, setSortOrder] = useState("relevance");
+  const [filters, setFilters] = useState({
+      size: [],
+      priceRange: [],
+      flavor: [],
+      petType: [],
+      brand: [],
+    });
+
+  useEffect(() => {
+    const fetchLightningDeals = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/products", {
+          params: { category: "lightningDeals" },
+        });
+
+        console.log("Fetched Lightning Deals:", response.data);
+        if (Array.isArray(response.data)) {
+          setProducts(response.data);
+        } else if (response.data.products && Array.isArray(response.data.products)) {
+          setProducts(response.data.products);
+        } else {
+          console.error("Invalid response format, expected an array or { products: [] }");
+        }
+      } catch (error) {
+        console.error("Error fetching lightning deals:", error);
+      }
+    };
+    fetchLightningDeals();
+  }, []);
+
+  useEffect(() => {
+    let sorted = [...products];
+    if (sortOrder === "low-to-high") {
+      sorted.sort((a, b) => a.dealPrice - b.dealPrice);
+    } else if (sortOrder === "high-to-low") {
+      sorted.sort((a, b) => b.dealPrice - a.dealPrice);
+    } else if (sortOrder === "discounted") {
+      sorted.sort((a, b) => {
+        const discountA = a.originalPrice - a.dealPrice;
+        const discountB = b.originalPrice - b.dealPrice;
+        return discountB - discountA;
+      });
+    }
+    setSortedProducts(sorted);
+  }, [sortOrder, products]);
+
+  // Filter data options (static, can be passed to the FilterPanel)
+  const filterData = {
+    size: ['Small', 'Medium', 'Large', 'Giant'],
+    priceRange: ['0-50', '51-100', '101-200', '201+'],
+    flavor: ['Chicken', 'Lamb', 'Fish', 'Vegetables', 'Rice'],
+    petType: ['Dogs', 'Cats'],
+    brand: ['Royal Canin', 'Chip Chops', 'JerHigh', 'Pedigree', 'Farmina N&D', 'Drools', 'Gnawlers', 'SmartHeart', 'Fresh For Paws', 'Bark Out Loud', 'Dogsee', 'Henlo', 'Kennel Kitchen', 'Carniwel', 'Dogaholic', 'Farmina Vet Life', 'BLE', 'Goodies', 'First Bark', 'Purepet', 'Doggos', 'Basil', 'Drools VET PRO', 'Himalaya', 'Petstar', 'Signature', 'Vet-Pro', 'NPIC', 'Acana', 'Brunos', 'Wild Essentials']
+  };
+  
+  
+  return (
+    <div className="flex flex-col items-center px-6 py-10 bg-gray-100 min-h-screen">
+      <h2 className="text-3xl font-bold text-gray-800 mb-6">Lightning Deals</h2>
+     
+      <div style={{ display: "flex" }}>
+      {/* <div style={{ flex: 1, paddingLeft: "20px", marginTop: "3.30rem" }}>
+        <SortOptions setSortOrder={setSortOrder} />
+      </div> */}
+          {/* Pass filterData to FilterPanel */}
+          <FilterPanel
+            filters={filters}
+            setFilters={setFilters}
+            filterData={filterData} // Pass dynamic filter data from filterData object
+          />
+       
+          <ProductList products={sortedProducts} /> {/* Show sorted products */}
+          <div style={{ flex: 1,}}>
+        <SortOptions setSortOrder={setSortOrder} />
+      </div>
+        </div>
+      
+      {/* <div style={{ flex: 1, paddingLeft: "20px", marginTop: "3.30rem" }}>
+        <SortOptions setSortOrder={setSortOrder} />
+      </div> */}
+    </div>
+  );
+};
+
+export default LightningDealsPage;

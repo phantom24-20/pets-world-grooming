@@ -1,117 +1,57 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import Map from "./Map"; // Placeholder for the map (replace with actual map implementation)
+import React, { useState, lazy, Suspense } from 'react';
+import 'leaflet/dist/leaflet.css';
 
-// Styled Components
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 20px auto;
-  max-width: 800px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  background-color: #f8f9fa;
-`;
-
-const Title = styled.h2`
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  color: #333;
-`;
-
-const StageContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin: 20px 0;
-`;
-
-const Stage = styled.div`
-  text-align: center;
-  flex: 1;
-  position: relative;
-
-  &:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 100%;
-    width: 100%;
-    height: 4px;
-    background: ${(props) => (props.completed ? "#4caf50" : "#ddd")};
-    z-index: 1;
-  }
-`;
-
-const StageCircle = styled.div`
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: ${(props) => (props.completed ? "#4caf50" : "#ddd")};
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  z-index: 2;
-`;
-
-const MapContainer = styled.div`
-  width: 100%;
-  height: 300px;
-  margin-top: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-`;
-
-const Button = styled.button`
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-top: 20px;
-
-  &:hover {
-    background-color: #45a049;
-  }
-`;
+// Lazy load MapComponent to improve performance
+const MapComponent = lazy(() => import('./Map'));
 
 export default function OrderTracking({ orderId }) {
   const [stages] = useState([
-    { id: 1, name: "Ordered", completed: true },
-    { id: 2, name: "Packed", completed: true },
-    { id: 3, name: "Shipped", completed: true },
-    { id: 4, name: "Out for Delivery", completed: false },
-    { id: 5, name: "Delivered", completed: false },
+    { id: 1, name: 'Ordered', completed: true },
+    { id: 2, name: 'Packed', completed: true },
+    { id: 3, name: 'Shipped', completed: true },
+    { id: 4, name: 'Out for Delivery', completed: false },
+    { id: 5, name: 'Delivered', completed: false },
   ]);
 
   const trackLocation = () => {
-    alert("Tracking GPS Location! (Replace with map API)");
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          alert(`Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`);
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          alert('Unable to retrieve location');
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+      );
+    } else {
+      alert('Geolocation is not supported by your browser');
+    }
   };
 
   return (
-    <Container>
-      <Title>Order Tracking for ID: {orderId}</Title>
-      <StageContainer>
+    <div className="flex flex-col items-center justify-center max-w-3xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md">
+      <h2 className="text-xl font-semibold text-gray-800 mb-4">Order Tracking for ID: {orderId}</h2>
+      <div className="flex justify-between w-full mb-6">
         {stages.map((stage, index) => (
-          <Stage key={stage.id} completed={stage.completed}>
-            <StageCircle completed={stage.completed}>{index + 1}</StageCircle>
-            <div>{stage.name}</div>
-          </Stage>
+          <div key={stage.id} className="flex flex-col items-center flex-1 relative">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${stage.completed ? 'bg-green-500' : 'bg-gray-300'}`}>{index + 1}</div>
+            <span className="text-sm text-gray-700 mt-1">{stage.name}</span>
+            {index < stages.length - 1 && (
+              <div className={`absolute top-4 left-1/2 transform -translate-x-1/2 h-1 w-full ${stage.completed ? 'bg-green-500' : 'bg-gray-300'}`} />
+            )}
+          </div>
         ))}
-      </StageContainer>
-      <MapContainer>
-        <Map />
-      </MapContainer>
-      <Button onClick={trackLocation}>Track Live GPS Location</Button>
-    </Container>
+      </div>
+      <div className="w-full h-72 border rounded-lg overflow-hidden shadow">
+        <Suspense fallback={<div>Loading Map...</div>}>
+          <MapComponent position={[20.5937, 78.9629]} />
+        </Suspense>
+      </div>
+      <button onClick={trackLocation} className="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
+        Track Live GPS Location
+      </button>
+    </div>
   );
 }
